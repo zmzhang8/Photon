@@ -44,25 +44,6 @@
 
 .main {
   margin-left: 68px;
-  background-color: gray;
   font-size: 20px;
-}
-
-.toolbar {
-  height: 48px;
-  position: sticky;
-  top: 0px;
-  padding: 0px 8px;
-  border-bottom: 2px solid lightgray;
-  color: gray;
-  background-color: white;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-}
-
-.toolbar > div {
-  margin: 0px 12px;
-  text-align: center;
 }
 </style>
