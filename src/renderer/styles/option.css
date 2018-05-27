@@ -11,38 +11,35 @@
 }
 
 .row {
-  padding: 8px 16px;
+  padding: 8px 8px;
   display: flex;
   align-items: center;
-}
-
-.justify-content-center {
   justify-content: center;
 }
 
 .row > .left {
   flex: 0 0 120px;
+  padding: 0 8px;
 }
 
 .row > .right {
   flex: 1 1 auto;
-  margin-left: 16px;
+  padding: 0 8px;
 }
 
 .pair {
   display: flex;
+  margin: 0 -4px;
 }
 
 .pair > .fixed {
   flex: 0 0 auto;
+  margin: 0 4px;
 }
 
 .pair > .expanded {
   flex: 1 1 auto;
-}
-
-.pair > .ml {
-  margin-left: 8px;
+  margin: 0 4px;
 }
 
 label {
@@ -99,6 +96,10 @@ input[type=text]:disabled {
 .button-large {
   padding: 8px 16px;
   font-size: 20px;
+}
+
+.vspace {
+  margin: 12px 0 0 0;
 }
 
 .hidden {
