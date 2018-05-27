@@ -2,8 +2,8 @@
   <div id="settings">
     <div class="content">
       <form>
-        <div id="settings-config" class="group">
-        <div class="header">Config</div>
+        <div id="settings-config" class="group" v-if="!settings.isDefault">
+          <div class="header">Config</div>
           <div class="row">
             <div class="left">
               <label for="settings-config-name">Name</label>
@@ -13,14 +13,14 @@
             </div>
           </div>
         </div>
-        <div id="settings-rpc" class="group">
+        <div id="settings-rpc" class="group" v-if="!settings.isDefault">
           <div class="header">RPC</div>
           <div class="row">
             <div class="left">
               <label for="settings-rpc-address">Address</label>
             </div>
             <div class="right">
-              <input id="settings-rpc-address" type="text" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required v-model="settings.rpc.address"></input>
+              <input id="settings-rpc-address" type="text" required v-model="settings.rpc.address"></input>
             </div>
           </div>
           <div class="row">
@@ -41,13 +41,10 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-protocol">Protocol</label>
+              <label for="settings-rpc-protocol">HTTPS</label>
             </div>
             <div class="right">
-              <select id="settings-rpc-protocol" v-model="settings.rpc.httpsEnabled">
-                <option value="false">HTTP</option>
-                <option value="true">HTTPS</option>
-              </select>
+              <input type="checkbox" v-model="settings.rpc.httpsEnabled">
             </div>
           </div>
           <div class="row">
@@ -62,9 +59,9 @@
         </div>
         <div id="settings-download" class="group">
           <div class="header">Download</div>
-          <div class="row">
+          <div class="row" v-if="settings.isDefault">
             <div class="left">
-              <label for="settings-download-path">Path</label>
+              <label for="settings-download-path">Directory</label>
             </div>
             <div class="right pair">
               <label for="settings-download-path-choose" class="button fixed">Choose</label>

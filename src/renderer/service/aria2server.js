@@ -4,7 +4,7 @@ import Converter from './converter'
 
 export default class Aria2Server {
   constructor (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions()) {
-    this.name = name.slice()
+    this.name = name
     this.rpc = JSON.parse(JSON.stringify(rpc))
     this.options = JSON.parse(JSON.stringify(options))
     this.handler = new Aria2RPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
@@ -52,10 +52,12 @@ export default class Aria2Server {
     })
   }
 
-  setServer (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions()) {
+  setServer (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions(), ignoreDir = true) {
     this.name = name.slice()
     this.rpc = JSON.parse(JSON.stringify(rpc))
+    let dir = this.options['dir']
     this.options = JSON.parse(JSON.stringify(options))
+    if (ignoreDir) this.options['dir'] = dir
     this.handler.setRPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
     this.handler.changeGlobalOption(options)
   }
@@ -67,13 +69,13 @@ export default class Aria2Server {
       gid: task['gid'],
       status: task['status'],
       name: task.hasOwnProperty('bittorrent') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
-      totalSize: bytesToString(task['totalLength']),
-      completedSize: bytesToString(task['completedLength']),
-      completedPercentage: Math.round(task['completedLength'] / task['totalLength'] * 10000) / 100,
+      totalSize: bytesToString(task['totalLength'], 2),
+      completedSize: bytesToString(task['completedLength'], 2),
+      completedPercentage: Math.round(task['completedLength'] / task['totalLength'] * 100) || 0,
       remainingTime: secondsToString((task['totalLength'] - task['completedLength']) / task['downloadSpeed']),
-      uploadLength: bytesToString(task['uploadLength']),
-      downloadSpeed: bytesToString(task['downloadSpeed']),
-      uploadSpeed: bytesToString(task['uploadSpeed']),
+      uploadedSize: bytesToString(task['uploadLength'], 2),
+      downloadSpeed: bytesToString(task['downloadSpeed'], 1),
+      uploadSpeed: bytesToString(task['uploadSpeed'], 1),
       connections: parseInt(task['connections']),
       dir: task['dir']
     }
