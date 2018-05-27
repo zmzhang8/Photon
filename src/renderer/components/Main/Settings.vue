@@ -69,7 +69,7 @@
             <div class="right pair">
               <label for="settings-download-path-choose" class="button fixed">Choose</label>
               <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
-              <input class="expanded inactive" type="text" disabled v-model="options['dir']"></input>
+              <input class="expanded" type="text" disabled v-model="options['dir']"></input>
             </div>
           </div>
           <div class="row">
@@ -110,7 +110,7 @@
           </div>
         </div>
         <div id="settings-save" class="row vspace">
-          <span class="button button-large ">Save</span>
+          <span class="button button-large" @click="$emit('changeSettings')">Save</span>
         </div>
       </form>
     </div>
@@ -118,10 +118,15 @@
 </template>
 
 <script>
-  import UnitConverter from '@/service/converter'
+  import Converter from '@/service/converter'
 
   export default {
     props: ['connection', 'alias', 'rpc', 'options'],
+    data: function () {
+      return {
+        changed: true
+      }
+    },
     computed: {
       limits: function () {
         const types = ['download', 'upload']
@@ -129,8 +134,8 @@
         types.forEach(type => {
           let limit = this.options['max-overall-' + type + '-limit']
           limits[type] = {
-            number: parseInt(UnitConverter.bytesToString(limit)),
-            unit: UnitConverter.bytesToUnit(limit)
+            number: parseInt(Converter.bytesToString(limit)),
+            unit: Converter.bytesToUnit(limit)
           }
         })
         return limits
@@ -145,12 +150,12 @@
       },
       setLimitNumber: function (event, type) {
         let number = parseInt(event.target.value) || 0
-        let bytes = UnitConverter.stringToBytes(number + this.limits[type].unit)
+        let bytes = Converter.stringToBytes(number + this.limits[type].unit)
         this.options['max-overall-' + type + '-limit'] = bytes
       },
       setLimitUnit: function (event, type) {
         let unit = event.target.value
-        let bytes = UnitConverter.stringToBytes(this.limits[type].number + unit)
+        let bytes = Converter.stringToBytes(this.limits[type].number + unit)
         this.options['max-overall-' + type + '-limit'] = bytes
       }
     }

@@ -1,6 +1,6 @@
 import OS from 'os'
 import Aria2RPC from './aria2rpc'
-import UnitConverter from '../service/converter'
+import Converter from './converter'
 
 export default class Aria2Server {
   constructor (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions()) {
@@ -61,8 +61,8 @@ export default class Aria2Server {
   }
 
   _formatTask (task) {
-    let bytesToString = UnitConverter.bytesToString
-    let secondsToString = UnitConverter.secondsToString
+    let bytesToString = Converter.bytesToString
+    let secondsToString = Converter.secondsToString
     return {
       gid: task['gid'],
       status: task['status'],

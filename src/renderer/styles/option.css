@@ -49,18 +49,14 @@ label {
   text-align: right;
 }
 
-input {
+input, textarea, select {
   font-family: Arial, Helvetica, sans-serif;
-}
-
-input[type=number], input[type=text], input[type=password], textarea, select {
   padding: 8px 12px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
   font-size: 16px;
-  line-height: 16px;
 }
 
 input[type=text], input[type=password], textarea {
@@ -71,19 +67,25 @@ input[type=number], select{
   min-width: 80px;
 }
 
-input[type=number]:focus, input[type=text]:focus, input[type=password]:focus, textarea:focus {
+input:focus, textarea:focus {
   border: 1px solid #555;
 }
 
-input[type=text]:disabled {
+input:invalid {
+  border: 1px solid red;
+}
+
+input:disabled {
   border: 1px solid #ddd;
   color: #444;
+  opacity: 0.65;
 }
 
 .button {
   padding: 8px;
-  border: 1px solid #555;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  background-color: #fafafa;
   font-size: 16px;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -91,6 +93,7 @@ input[type=text]:disabled {
 .button:hover {
   text-decoration: none;
   cursor: pointer;
+  border: 1px solid #555;
 }
 
 .button-large {

@@ -1,4 +1,4 @@
-export default class UnitConverter {
+export default class Converter {
   static secondsToString (seconds) {
     if (!seconds) seconds = 0
     if (typeof (seconds) === 'string') seconds = parseInt(seconds)
