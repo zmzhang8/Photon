@@ -19,9 +19,7 @@ export default class Aria2RPC {
   addUri (uris, options = {}, successCallback, errorCallback) {
     const method = 'addUri'
     if (uris.constructor !== Array) uris = [uris]
-    let paramsPool = uris.map(uriGroup => {
-      return [uriGroup.constructor === Array ? uriGroup : [uriGroup], options]
-    })
+    let paramsPool = uris.map(uriGroup => [uriGroup.constructor === Array ? uriGroup : [uriGroup], options])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -40,18 +38,14 @@ export default class Aria2RPC {
   remove (gids, successCallback, errorCallback) {
     const method = 'remove'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid]
-    })
+    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
   pause (gids, successCallback, errorCallback) {
     const method = 'pause'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid]
-    })
+    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -63,9 +57,7 @@ export default class Aria2RPC {
   unpause (gids, successCallback, errorCallback) {
     const method = 'unpause'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid]
-    })
+    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -77,18 +69,14 @@ export default class Aria2RPC {
   tellStatus (gids, successCallback, errorCallback) {
     const method = 'tellStatus'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid, this._taskStatusKeys]
-    })
+    let paramsPool = gids.map(gid => [gid, this._taskStatusKeys])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
   getUris (gids, successCallback, errorCallback) {
     const method = 'getUris'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid]
-    })
+    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -134,9 +122,7 @@ export default class Aria2RPC {
   removeDownloadResult (gids, successCallback, errorCallback) {
     const method = 'removeDownloadResult'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => {
-      return [gid]
-    })
+    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -158,7 +144,7 @@ export default class Aria2RPC {
   _request (method, params, successCallback, errorCallback) {
     this._jsonrpc.request(this._url, method, [this._token].concat(params), this._id, result => {
       this._resultHandler(method, result)
-      if (typeof (successCallback) === 'function') successCallback(result)
+      if (typeof (successCallback) === 'function') successCallback(result.result)
     }, error => {
       if (typeof (errorCallback) === 'function') errorCallback(error)
     })

@@ -14,9 +14,7 @@ export default class JSONRPC {
 
   batchRequest (url, requests, successCallback, errorCallback) {
     if (requests.constructor !== Array) requests = [requests]
-    let data = requests.map(request => {
-      return this._getRequestData(request.method, request.params, request.id)
-    })
+    let data = requests.map(request => this._getRequestData(request.method, request.params, request.id))
     this._fetch(url, data, successCallback, errorCallback)
   }
 
