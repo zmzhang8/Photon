@@ -122,11 +122,6 @@
 
   export default {
     props: ['settings'],
-    data: function () {
-      return {
-        changed: true
-      }
-    },
     computed: {
       limits: function () {
         const types = ['download', 'upload']
