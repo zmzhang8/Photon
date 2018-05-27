@@ -4,6 +4,7 @@ export default class Aria2Manager {
   constructor () {
     this.servers = this._initServers()
     this.syncTasksAll()
+    setInterval(() => { this.syncTasksAll() }, 3000)
   }
 
   addServer () {

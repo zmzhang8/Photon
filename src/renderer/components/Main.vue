@@ -3,7 +3,7 @@
     <div class="sidebar">
       <router-link to="/downloads"><i class="fas fa-arrow-down"></i></router-link>
       <router-link to="/completes"><i class="fas fa-check"></i></router-link>
-      <router-link to="/settings"><i class="fas fa-cog"></i></router-link>
+      <router-link to="/settings" @click.native="syncOptions()"><i class="fas fa-cog"></i></router-link>
     </div>
 
     <div class="main">
@@ -23,15 +23,11 @@
 
 <script>
   export default {
-    props: ['server', 'serverNameList'],
+    props: ['server', 'serverNameList', 'isDefault'],
     computed: {
       downloads: function () {
         let tasks = this.server.tasks
-        return {
-          active: tasks.active,
-          waiting: tasks.waiting,
-          paused: tasks.paused
-        }
+        return tasks.active.concat(tasks.waiting).concat(tasks.paused)
       },
       completes: function () {
         return this.server.tasks.stopped
@@ -39,18 +35,22 @@
       settings: function () {
         let server = this.server
         return {
-          name: server.name.slice(),
+          name: server.name,
           connection: server.connection,
           rpc: JSON.parse(JSON.stringify(server.rpc)),
-          options: JSON.parse(JSON.stringify(server.options))
+          options: JSON.parse(JSON.stringify(server.options)),
+          isDefault: this.isDefault
         }
       }
     },
     methods: {
+      syncOptions: function () {
+        this.server.syncOptions()
+      },
       updateSettings: function () {
         let server = this.server
         let settings = this.settings
-        server.setServer(settings.name, settings.rpc, settings.options)
+        server.setServer(settings.name, settings.rpc, settings.options, !this.isDefault)
         server.checkConnection()
         this.$emit('updateServer')
       }

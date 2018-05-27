@@ -1,32 +1,30 @@
 export default class Converter {
   static secondsToString (seconds) {
-    if (!seconds) seconds = 0
+    if (!seconds) return ''
     if (typeof (seconds) === 'string') seconds = parseInt(seconds)
-    if (seconds === Infinity) {
-      return ''
-    } else if (seconds >= 86400) {
+    if (seconds >= 86400) {
       return 'More than one day'
     } else {
-      var str = ''
-      str += Math.floor(seconds / 3600)
+      let hours = Math.floor(seconds / 3600)
       seconds %= 3600
-      str += ':' + Math.floor(seconds / 60)
+      let minutes = Math.floor(seconds / 60)
       seconds %= 60
-      str += ':' + Math.floor(seconds)
-      return str
+      seconds = Math.floor(seconds)
+      return hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds
     }
   }
 
-  static bytesToString (bytes) {
+  static bytesToString (bytes, precision = 0) {
     if (!bytes) bytes = 0
     if (typeof (bytes) === 'string') bytes = parseInt(bytes)
     bytes = Math.round(bytes)
+    let base = Math.pow(10, parseInt(precision))
     if (bytes >= 1073741824) {
-      return Math.round((bytes / 1073741824) * 100) / 100 + 'G'
+      return Math.round((bytes / 1073741824) * base) / base + 'G'
     } else if (bytes >= 1048576) {
-      return Math.round((bytes / 1048576) * 100) / 100 + 'M'
+      return Math.round((bytes / 1048576) * base) / base + 'M'
     } else if (bytes >= 1024) {
-      return Math.round((bytes / 1024) * 100) / 100 + 'K'
+      return Math.round((bytes / 1024) * base) / base + 'K'
     } else {
       return Math.round(bytes) + ''
     }
