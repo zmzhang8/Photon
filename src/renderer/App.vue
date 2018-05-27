@@ -2,7 +2,8 @@
   <div id="app">
     <router-view
       :server="manager.servers[serverId]"
-      :serverNameList="serverNameList">
+      :serverNameList="serverNameList"
+      @updateServer="saveData()">
     </router-view>
   </div>
 </template>
@@ -16,6 +17,11 @@
         return this.manager.servers.map(server => {
           return server.name
         })
+      }
+    },
+    methods: {
+      saveData: function () {
+        this.manager.writeStorage()
       }
     }
   }

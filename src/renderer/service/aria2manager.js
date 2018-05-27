@@ -23,16 +23,7 @@ export default class Aria2Manager {
     })
   }
 
-  _initServers () {
-    let servers = this._readStorage().servers || [{}]
-    return servers.map(server => new Aria2Server(server.name, server.rpc, server.options))
-  }
-
-  _readStorage () {
-    return window.localStorage.getItem(this.constructor.name) || {}
-  }
-
-  _writeStorage () {
+  writeStorage () {
     let data = {
       servers: this.servers.map(server => {
         return {
@@ -43,5 +34,14 @@ export default class Aria2Manager {
       })
     }
     window.localStorage.setItem(this.constructor.name, JSON.stringify(data))
+  }
+
+  _initServers () {
+    let servers = this._readStorage().servers || [{}]
+    return servers.map(server => new Aria2Server(server.name, server.rpc, server.options))
+  }
+
+  _readStorage () {
+    return JSON.parse(window.localStorage.getItem(this.constructor.name)) || {}
   }
 }

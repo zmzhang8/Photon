@@ -10,10 +10,12 @@
       <router-view
         :downloads="downloads"
         :completes="completes"
+        :settings="settings"
         :connection="server.connection"
         :alias="server.name"
         :rpc="server.rpc"
-        :options="server.options">
+        :options="server.options"
+        @updateSettings="updateSettings()">
       </router-view>
     </div>
   </div>
@@ -33,6 +35,24 @@
       },
       completes: function () {
         return this.server.tasks.stopped
+      },
+      settings: function () {
+        let server = this.server
+        return {
+          name: server.name.slice(),
+          connection: server.connection,
+          rpc: JSON.parse(JSON.stringify(server.rpc)),
+          options: JSON.parse(JSON.stringify(server.options))
+        }
+      }
+    },
+    methods: {
+      updateSettings: function () {
+        let server = this.server
+        let settings = this.settings
+        server.setServer(settings.name, settings.rpc, settings.options)
+        server.checkConnection()
+        this.$emit('updateServer')
       }
     }
   }

@@ -9,7 +9,7 @@
               <label for="settings-config-name">Name</label>
             </div>
             <div class="right">
-              <input id="settings-config-name" type="text" required v-model="alias"></input>
+              <input id="settings-config-name" type="text" required v-model="settings.name"></input>
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
               <label for="settings-rpc-address">Address</label>
             </div>
             <div class="right">
-              <input id="settings-rpc-address" type="text" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required v-model="rpc.address"></input>
+              <input id="settings-rpc-address" type="text" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required v-model="settings.rpc.address"></input>
             </div>
           </div>
           <div class="row">
@@ -28,7 +28,7 @@
               <label for="settings-rpc-port">Port</label>
             </div>
             <div class="right">
-              <input id="settings-rpc-port" type="number" min="0" max="65535" step="1" required v-model.number="rpc.port"></input>
+              <input id="settings-rpc-port" type="number" min="0" max="65535" step="1" required v-model.number="settings.rpc.port"></input>
             </div>
           </div>
           <div class="row">
@@ -36,7 +36,7 @@
               <label for="settings-rpc-token">Token</label>
             </div>
             <div class="right">
-              <input id="settings-rpc-token" type="password" v-model="rpc.token"></input>
+              <input id="settings-rpc-token" type="password" v-model="settings.rpc.token"></input>
             </div>
           </div>
           <div class="row">
@@ -44,7 +44,7 @@
               <label for="settings-rpc-protocol">Protocol</label>
             </div>
             <div class="right">
-              <select id="settings-rpc-protocol" v-model="rpc.httpsEnabled">
+              <select id="settings-rpc-protocol" v-model="settings.rpc.httpsEnabled">
                 <option value="false">HTTP</option>
                 <option value="true">HTTPS</option>
               </select>
@@ -55,8 +55,8 @@
               <label for="settings-rpc-status">Status</label>
             </div>
             <div class="right">
-              <span class="badge badge-success" v-if="connection">Connected</span>
-              <span class="badge badge-danger" v-if="!connection">Not Connected</span>
+              <span class="badge badge-success" v-if="settings.connection">Connected</span>
+              <span class="badge badge-danger" v-if="!settings.connection">Not Connected</span>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@
             <div class="right pair">
               <label for="settings-download-path-choose" class="button fixed">Choose</label>
               <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
-              <input class="expanded" type="text" disabled v-model="options['dir']"></input>
+              <input class="expanded" type="text" disabled v-model="settings.options['dir']"></input>
             </div>
           </div>
           <div class="row">
@@ -77,7 +77,7 @@
               <label for="settings-download-max-active">Max Active</label>
             </div>
             <div class="right">
-              <input id="settings-download-max-active" type="number" min="1" max="100" step="1" required v-model.number="options['max-concurrent-downloads']"></input>
+              <input id="settings-download-max-active" type="number" min="1" max="100" step="1" required v-model.number="settings.options['max-concurrent-downloads']"></input>
             </div>
           </div>
           <div class="row">
@@ -110,7 +110,7 @@
           </div>
         </div>
         <div id="settings-save" class="row vspace">
-          <span class="button button-large" @click="$emit('changeSettings')">Save</span>
+          <span class="button button-large" @click="$emit('updateSettings')">Save</span>
         </div>
       </form>
     </div>
@@ -121,7 +121,7 @@
   import Converter from '@/service/converter'
 
   export default {
-    props: ['connection', 'alias', 'rpc', 'options'],
+    props: ['settings'],
     data: function () {
       return {
         changed: true
@@ -132,7 +132,7 @@
         const types = ['download', 'upload']
         let limits = {}
         types.forEach(type => {
-          let limit = this.options['max-overall-' + type + '-limit']
+          let limit = this.settings.options['max-overall-' + type + '-limit']
           limits[type] = {
             number: parseInt(Converter.bytesToString(limit)),
             unit: Converter.bytesToUnit(limit)
@@ -145,18 +145,18 @@
       setDir: function (event) {
         let files = event.target.files
         if (files.length !== 0) {
-          this.options['dir'] = files[0].path
+          this.settings.options['dir'] = files[0].path
         }
       },
       setLimitNumber: function (event, type) {
         let number = parseInt(event.target.value) || 0
         let bytes = Converter.stringToBytes(number + this.limits[type].unit)
-        this.options['max-overall-' + type + '-limit'] = bytes
+        this.settings.options['max-overall-' + type + '-limit'] = bytes
       },
       setLimitUnit: function (event, type) {
         let unit = event.target.value
         let bytes = Converter.stringToBytes(this.limits[type].number + unit)
-        this.options['max-overall-' + type + '-limit'] = bytes
+        this.settings.options['max-overall-' + type + '-limit'] = bytes
       }
     }
   }
