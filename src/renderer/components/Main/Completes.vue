@@ -5,13 +5,28 @@
       <div><i class="fas fa-folder-open"></i></div>
     </div>
     <div class="content">
+      <task v-for="task in completes"
+        :key="task.gid"
+        :gid="task.gid"
+        :status="task.status"
+        :alias="task.name"
+        :totalSize="task.totalSize"
+        :completedPercentage="task.completedPercentage"
+        :remainingTime="task.remainingTime"
+        :uploadedSize="task.uploadedSize"
+        :downloadSpeed="task.downloadSpeed"
+        :uploadSpeed="task.uploadSpeed">
+      </task>
     </div>
   </div>
 </template>
 
 <script>
+  import Task from './Task/Task'
+
   export default {
-    name: 'completes'
+    components: { Task },
+    props: ['completes']
   }
 </script>
 

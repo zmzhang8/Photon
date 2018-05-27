@@ -7,7 +7,7 @@
       <div class="title" :title="alias">{{alias}}</div>
       <div class="small" v-if="totalSize !== '0'">{{totalSize}}</div>
     </div>
-    <div class="col-progress" v-if="!completed">
+    <div class="col-progress">
       <div class="progress-bar">
         <div class="progress" :style="{width: completedPercentage + '%'}"></div>
       </div>
@@ -44,7 +44,10 @@
         icon: {
           active: ['fas', 'fa-arrow-down'],
           waiting: ['fas', 'fa-clock'],
-          paused: ['fas', 'fa-pause']
+          paused: ['fas', 'fa-pause'],
+          complete: ['fas', 'fa-check'],
+          removed: ['fas', 'fa-times'],
+          error: ['fas', 'fa-exclamation-circle']
         }
       }
     },
@@ -57,7 +60,7 @@
 </script>
 
 <style lang="css" scoped>
-@import "~@fortawesome/fontawesome-free-webfonts/css/fa-regular.css";
+  @import "~@fortawesome/fontawesome-free-webfonts/css/fa-regular.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 

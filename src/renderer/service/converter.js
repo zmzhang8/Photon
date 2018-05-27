@@ -1,6 +1,6 @@
 export default class Converter {
   static secondsToString (seconds) {
-    if (!seconds) return ''
+    if (!seconds || seconds === Infinity) return ''
     if (typeof (seconds) === 'string') seconds = parseInt(seconds)
     if (seconds >= 86400) {
       return 'More than one day'
