@@ -1,5 +1,6 @@
 import OS from 'os'
 import Aria2RPC from './aria2rpc'
+import UnitConverter from '../service/converter'
 
 export default class Aria2Server {
   constructor (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions()) {
@@ -60,19 +61,19 @@ export default class Aria2Server {
   }
 
   _formatTask (task) {
-    let stringifySizeInBytes = this._stringifySizeInBytes
-    let stringfyTimeIntervalInSeconds = this._stringfyTimeIntervalInSeconds
+    let bytesToString = UnitConverter.bytesToString
+    let secondsToString = UnitConverter.secondsToString
     return {
       gid: task['gid'],
       status: task['status'],
       name: task.hasOwnProperty('bittorrent') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
-      totalSize: stringifySizeInBytes(task['totalLength']),
-      completedSize: stringifySizeInBytes(task['completedLength']),
+      totalSize: bytesToString(task['totalLength']),
+      completedSize: bytesToString(task['completedLength']),
       completedPercentage: Math.round(task['completedLength'] / task['totalLength'] * 10000) / 100,
-      remainingTime: stringfyTimeIntervalInSeconds((task['totalLength'] - task['completedLength']) / task['downloadSpeed']),
-      uploadLength: stringifySizeInBytes(task['uploadLength']),
-      downloadSpeed: stringifySizeInBytes(task['downloadSpeed']),
-      uploadSpeed: stringifySizeInBytes(task['uploadSpeed']),
+      remainingTime: secondsToString((task['totalLength'] - task['completedLength']) / task['downloadSpeed']),
+      uploadLength: bytesToString(task['uploadLength']),
+      downloadSpeed: bytesToString(task['downloadSpeed']),
+      uploadSpeed: bytesToString(task['uploadSpeed']),
       connections: parseInt(task['connections']),
       dir: task['dir']
     }
@@ -93,68 +94,6 @@ export default class Aria2Server {
       'max-concurrent-downloads': 5,
       'max-overall-download-limit': 0,
       'max-overall-upload-limit': 262144
-    }
-  }
-
-  _stringfyTimeIntervalInSeconds (interval) {
-    if (!interval) interval = 0
-    if (typeof (interval) === 'string') interval = parseInt(interval)
-    if (interval === Infinity) {
-      return ''
-    } else if (interval >= 86400) {
-      return 'More than one day'
-    } else {
-      var str = ''
-      str += Math.floor(interval / 3600)
-      interval %= 3600
-      str += ':' + Math.floor(interval / 60)
-      interval %= 60
-      str += ':' + Math.floor(interval)
-      return str
-    }
-  }
-
-  _stringifySizeInBytes (size) {
-    if (!size) size = 0
-    if (typeof (size) === 'string') size = parseInt(size)
-    size = Math.round(size)
-    if (size >= 1073741824) {
-      return Math.round((size / 1073741824) * 100) / 100 + 'G'
-    } else if (size >= 1048576) {
-      return Math.round((size / 1048576) * 100) / 100 + 'M'
-    } else if (size >= 1024) {
-      return Math.round((size / 1024) * 100) / 100 + 'K'
-    } else {
-      return Math.round(size) + ''
-    }
-  }
-
-  _bestUnitForSizeInBytes (size) {
-    if (!size) size = 0
-    if (typeof (size) === 'string') size = parseInt(size)
-    size = Math.round(size)
-    if (size >= 1073741824) {
-      return 'G'
-    } else if (size >= 1048576) {
-      return 'M'
-    } else if (size >= 1024) {
-      return 'K'
-    } else {
-      return ''
-    }
-  }
-
-  _parseSizeToBytes (str) {
-    if (!str) str = '0'
-    let size = parseFloat(str)
-    if (str.endsWith('G')) {
-      return Math.round(size * 1073741824)
-    } else if (str.endsWith('M')) {
-      return Math.round(size * 1048576)
-    } else if (str.endsWith('K')) {
-      return Math.round(size * 1024)
-    } else {
-      return Math.round(size)
     }
   }
 }
