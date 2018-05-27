@@ -1,20 +1,19 @@
 import Vue from 'vue'
 
-// import Aria2RPC from '../service/aria2rpc'
+import Aria2Manager from '@/service/aria2manager'
 import App from './App'
 import router from './router'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 
-let serverId = 0
-
 /* eslint-disable no-new */
 new Vue({
   components: { App },
   router,
-  template: '<App/>',
+  template: '<App :manager="manager" :serverId="serverId"></App>',
   data: {
-    serverId: serverId
+    manager: new Aria2Manager(),
+    serverId: 0
   }
 }).$mount('#app')

@@ -16,7 +16,7 @@
 </script>
 
 <style lang="css" scoped>
-@import "~@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
-@import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
-@import "~@/css/toolbar.css";
+  @import "~@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
+  @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
+  @import "~@/styles/toolbar.css";
 </style>
