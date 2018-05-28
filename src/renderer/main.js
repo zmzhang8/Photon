@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import Aria2Manager from '@/service/aria2manager'
+
 import App from './App'
 import router from './router'
 
@@ -20,28 +21,9 @@ new Vue({
   }
 }).$mount('#app')
 
-// Electron
-function startAria2 (options) {
-  const exec = require('child_process').exec
-  const join = require('path').join
-  const platform = require('os').platform()
-  const homedir = require('os').homedir()
-  let root = join(__static, 'aria2')
-  let conf = join(root, 'aria2.conf')
-  let aria2c = platform === 'linux' ? 'aria2c' : join(root, platform, 'aria2c')
-  let command = '"' + aria2c + '" --conf-path="' + conf + '"'
-  if (!options.hasOwnProperty('dir')) options['dir'] = homedir
-  Object.keys(options).forEach(key => {
-    command += ' --' + key + '="' + options[key] + '"'
-  })
-  return exec(command, (error, stdout, stderr) => {
-    if (error) console.error(error.message)
-    if (stderr) console.warn(stderr)
-    if (stdout) console.log(stdout)
-  })
-}
-
-let aria2process = startAria2(aria2manager.servers[0].options)
-require('electron').remote.app.on('window-all-closed', () => {
-  aria2process.kill()
+// Desktop App
+const AppData = require('@/service/appdata').default
+const app = require('electron').remote.app
+app.on('will-quit', () => {
+  AppData.writeData(aria2manager.servers[0].options)
 })
