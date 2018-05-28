@@ -9,6 +9,7 @@ if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 
 let aria2manager = new Aria2Manager()
+aria2manager.syncTasksAll()
 aria2manager.setSyncInterval(3000)
 
 new Vue({

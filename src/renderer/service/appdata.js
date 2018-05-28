@@ -17,9 +17,8 @@ export default class AppData {
     else return join(homedir, '.config', appName)
   }
 
-  static writeData (data) {
+  static checkDir () {
     const dir = AppData.dir()
-    const conf = Path.join(dir, 'conf.json')
     try {
       let stat = FS.statSync(dir)
       if (stat.isFile()) {
@@ -29,7 +28,12 @@ export default class AppData {
     } catch (error) {
       FS.mkdirSync(dir, 0o755)
     }
-    FS.writeFileSync(conf, JSON.stringify(data))
+  }
+
+  static writeData (data) {
+    const conf = Path.join(AppData.dir(), 'conf.json')
+    AppData.checkDir()
+    FS.writeFileSync(conf, JSON.stringify(data), { 'mode': 0o644 })
   }
 
   static readData () {

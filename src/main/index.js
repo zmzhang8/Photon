@@ -81,16 +81,36 @@ app.on('ready', () => {
 // aria2
 function startAria2 () {
   const AppData = require('../renderer/service/appdata').default
+  const fs = require('fs')
   const exec = require('child_process').exec
   const join = require('path').join
   const platform = require('os').platform()
   const homedir = require('os').homedir()
+  const datadir = AppData.dir()
   const root = join(__static, 'aria2')
-  const conf = join(root, 'aria2.conf')
   const aria2c = platform === 'linux' ? 'aria2c' : join(root, platform, 'aria2c')
+  const conf = join(root, 'aria2.conf')
+  const session = join(datadir, 'aria2.session')
 
-  let options = AppData.readData() || {}
+  try {
+    AppData.checkDir()
+    let stat = fs.statSync(session)
+    if (stat.isDirectory()) {
+      fs.rmdirSync(session)
+      fs.writeFileSync(session, '', { 'mode': 0o644 })
+    }
+  } catch (error) {
+    fs.writeFileSync(session, '', { 'mode': 0o644 })
+  }
+
+  let options = Object.assign({
+    'input-file': session,
+    'save-session': session,
+    'dht-file-path': join(datadir, 'dht.dat'),
+    'dht-file-path6': join(datadir, 'dht6.dat')
+  }, AppData.readData() || {})
   if (!options.hasOwnProperty('dir')) options['dir'] = join(homedir, 'Downloads')
+
   let command = '"' + aria2c + '" --conf-path="' + conf + '"'
   Object.keys(options).forEach(key => {
     command += ' --' + key + '="' + options[key] + '"'
