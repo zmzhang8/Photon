@@ -51,6 +51,10 @@ export default class Aria2Server {
     })
   }
 
+  isActive () {
+    return this.tasks.active.length !== 0
+  }
+
   setServer (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions(), ignoreDir = true) {
     this.name = name.slice()
     this.rpc = JSON.parse(JSON.stringify(rpc))
