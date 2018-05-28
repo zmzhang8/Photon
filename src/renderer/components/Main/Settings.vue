@@ -66,7 +66,7 @@
             <div class="right pair">
               <label for="settings-download-path-choose" class="button fixed">Choose</label>
               <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
-              <input class="expanded" type="text" disabled v-model="settings.options['dir']"></input>
+              <input class="expanded" type="text" disabled v-model="settings.options['dir']" ref="directory"></input>
             </div>
           </div>
           <div class="row">
@@ -138,6 +138,7 @@
         let files = event.target.files
         if (files.length !== 0) {
           this.settings.options['dir'] = files[0].path
+          this.$refs.directory.change()
         }
       },
       setLimitNumber: function (event, type) {

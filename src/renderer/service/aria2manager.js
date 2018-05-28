@@ -3,8 +3,7 @@ import Aria2Server from './aria2server'
 export default class Aria2Manager {
   constructor () {
     this.servers = this._initServers()
-    this.syncTasksAll()
-    setInterval(() => { this.syncTasksAll() }, 3000)
+    this.sync = undefined
   }
 
   addServer () {
@@ -15,6 +14,15 @@ export default class Aria2Manager {
     if (serverId >= 1 && serverId < this.servers.length) {
       this.servers.splice(serverId, 1)
     }
+  }
+
+  setSyncInterval (interval) {
+    interval = interval || 3000
+    this.sync = setInterval(() => { this.syncTasksAll() }, interval)
+  }
+
+  clearSyncInterval () {
+    clearInterval(this.sync)
   }
 
   syncTasksAll () {

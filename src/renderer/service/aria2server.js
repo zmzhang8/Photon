@@ -1,4 +1,3 @@
-import OS from 'os'
 import Aria2RPC from './aria2rpc'
 import Converter from './converter'
 
@@ -38,9 +37,9 @@ export default class Aria2Server {
     let options = this.options
     this.handler.getGlobalOption(result => {
       options['dir'] = result['dir']
-      options['max-concurrent-downloads'] = result['max-concurrent-downloads']
-      options['max-overall-download-limit'] = result['max-overall-download-limit']
-      options['max-overall-upload-limit'] = result['max-overall-upload-limit']
+      options['max-concurrent-downloads'] = parseInt(result['max-concurrent-downloads'])
+      options['max-overall-download-limit'] = parseInt(result['max-overall-download-limit'])
+      options['max-overall-upload-limit'] = parseInt(result['max-overall-upload-limit'])
     })
   }
 
@@ -92,7 +91,6 @@ export default class Aria2Server {
 
   _defaultOptions () {
     return {
-      'dir': OS.homedir() + '/Downloads',
       'max-concurrent-downloads': 5,
       'max-overall-download-limit': 0,
       'max-overall-upload-limit': 262144
