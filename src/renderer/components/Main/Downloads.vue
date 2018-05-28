@@ -9,6 +9,7 @@
     <div class="content">
       <task v-for="task in downloads"
         :key="task.gid"
+        :selected="selects[task.gid]"
         :gid="task.gid"
         :status="task.status"
         :alias="task.name"
@@ -17,7 +18,8 @@
         :remainingTime="task.remainingTime"
         :uploadedSize="task.uploadedSize"
         :downloadSpeed="task.downloadSpeed"
-        :uploadSpeed="task.uploadSpeed">
+        :uploadSpeed="task.uploadSpeed"
+        @selectTask="selectTask($event)">
       </task>
     </div>
   </div>
@@ -28,7 +30,21 @@
 
   export default {
     components: { Task },
-    props: ['downloads']
+    props: ['downloads'],
+    data: function () {
+      return {
+        selects: {}
+      }
+    },
+    methods: {
+      selectTask: function (gid) {
+        let selects = this.selects
+        if (selects.hasOwnProperty(gid)) {
+          this.$set(selects, gid, false)
+          delete selects[gid]
+        } else this.$set(selects, gid, true)
+      }
+    }
   }
 </script>
 

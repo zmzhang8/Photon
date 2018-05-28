@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" :class="{selected: selected}" @click="$emit('selectTask', gid)">
     <div class="col-status">
       <i :class="icon[status]"></i>
     </div>
@@ -29,6 +29,7 @@
 <script>
   export default {
     props: [
+      'selected',
       'gid',
       'status',
       'alias',
@@ -47,7 +48,7 @@
           paused: ['fas', 'fa-pause'],
           complete: ['fas', 'fa-check'],
           removed: ['fas', 'fa-times'],
-          error: ['fas', 'fa-exclamation-circle']
+          error: ['fas', 'fa-exclamation']
         }
       }
     },
@@ -129,6 +130,10 @@
     width: 0%;
     border-radius: 8px;
     transition: width 0.6s ease;
+  }
+
+  .selected {
+    background-color: #D6ECFF;
   }
 
 </style>

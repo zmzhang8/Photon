@@ -24,6 +24,11 @@
 <script>
   export default {
     props: ['server', 'serverNameList', 'isDefault'],
+    data: function () {
+      return {
+        selects: new Set()
+      }
+    },
     computed: {
       downloads: function () {
         let tasks = this.server.tasks
