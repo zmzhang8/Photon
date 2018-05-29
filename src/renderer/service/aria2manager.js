@@ -43,6 +43,7 @@ export default class Aria2Manager {
       })
     }
     window.localStorage.setItem(this.constructor.name, JSON.stringify(data))
+    console.log(this.constructor.name)
   }
 
   _initServers () {

@@ -22,8 +22,11 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "photon",
+    "productName": "Photon",
     "appId": "org.simulatedgreg.electron-vue",
+    "asarUnpack": [
+      "**/static/aria2${/*}"
+    ],
     "directories": {
       "output": "build"
     },

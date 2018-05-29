@@ -17,23 +17,15 @@ export default class AppData {
     else return join(homedir, '.config', appName)
   }
 
-  static checkDir () {
-    const dir = AppData.dir()
-    try {
-      let stat = FS.statSync(dir)
-      if (stat.isFile()) {
-        FS.unlink(dir)
-        FS.mkdirSync(dir, 0o755)
-      }
-    } catch (error) {
-      FS.mkdirSync(dir, 0o755)
-    }
-  }
-
   static writeData (data) {
-    const conf = Path.join(AppData.dir(), 'conf.json')
-    AppData.checkDir()
-    FS.writeFileSync(conf, JSON.stringify(data), { 'mode': 0o644 })
+    let dir = AppData.dir()
+    const conf = Path.join(dir, 'conf.json')
+    AppData.makeDir(dir)
+    try {
+      FS.writeFileSync(conf, JSON.stringify(data), { 'mode': 0o644 })
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   static readData () {
@@ -44,6 +36,40 @@ export default class AppData {
     } catch (error) {
       console.error(error.message)
       return ''
+    }
+  }
+
+  static makeExecutable (path) {
+    try {
+      FS.chmodSync(path, 0o755)
+      return true
+    } catch (error) {
+      console.error(error.message)
+      return false
+    }
+  }
+
+  static touchFile (path) {
+    try {
+      FS.statSync(path)
+    } catch (e) {
+      try {
+        FS.writeFileSync(path, '', { 'mode': 0o644 })
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
+  }
+
+  static makeDir (path) {
+    try {
+      FS.statSync(path)
+    } catch (e) {
+      try {
+        FS.mkdirSync(path, 0o755)
+      } catch (error) {
+        console.error(error.message)
+      }
     }
   }
 }

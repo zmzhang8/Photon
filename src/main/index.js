@@ -1,6 +1,11 @@
 'use strict'
 
-import { app, BrowserWindow, dialog } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  dialog
+} from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -35,8 +40,66 @@ function createWindow () {
   })
 }
 
+const menuTemplate = [{
+  label: 'Application',
+  submenu: [{
+    label: 'About Application',
+    selector: 'orderFrontStandardAboutPanel:'
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Quit',
+    accelerator: 'Command+Q',
+    click: function () {
+      app.quit()
+    }
+  }
+  ]
+},
+{
+  label: 'Edit',
+  submenu: [{
+    label: 'Undo',
+    accelerator: 'CmdOrCtrl+Z',
+    selector: 'undo:'
+  },
+  {
+    label: 'Redo',
+    accelerator: 'Shift+CmdOrCtrl+Z',
+    selector: 'redo:'
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: 'Cut',
+    accelerator: 'CmdOrCtrl+X',
+    selector: 'cut:'
+  },
+  {
+    label: 'Copy',
+    accelerator: 'CmdOrCtrl+C',
+    selector: 'copy:'
+  },
+  {
+    label: 'Paste',
+    accelerator: 'CmdOrCtrl+V',
+    selector: 'paste:'
+  },
+  {
+    label: 'Select All',
+    accelerator: 'CmdOrCtrl+A',
+    selector: 'selectAll:'
+  }
+  ]
+}
+]
+
 app.on('ready', () => {
   createWindow()
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   aria2process = startAria2()
 })
 
@@ -79,27 +142,19 @@ app.on('ready', () => {
 // aria2
 function startAria2 () {
   const AppData = require('../renderer/service/appdata').default
-  const fs = require('fs')
   const exec = require('child_process').exec
   const join = require('path').join
   const platform = require('os').platform()
   const homedir = require('os').homedir()
   const datadir = AppData.dir()
-  const root = join(__static, 'aria2')
+  const root = join(__static, 'aria2').replace('app.asar', 'app.asar.unpacked')
   const aria2c = platform === 'linux' ? 'aria2c' : join(root, platform, 'aria2c')
   const conf = join(root, 'aria2.conf')
   const session = join(datadir, 'aria2.session')
 
-  try {
-    AppData.checkDir()
-    let stat = fs.statSync(session)
-    if (stat.isDirectory()) {
-      fs.rmdirSync(session)
-      fs.writeFileSync(session, '', { 'mode': 0o644 })
-    }
-  } catch (error) {
-    fs.writeFileSync(session, '', { 'mode': 0o644 })
-  }
+  AppData.makeExecutable(aria2c)
+  AppData.makeDir(datadir)
+  AppData.touchFile(session)
 
   let options = Object.assign({
     'input-file': session,
@@ -116,8 +171,8 @@ function startAria2 () {
   return exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(error.message)
-      const message = 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.'
-      dialog.showErrorBox('Conflicts', message)
+      // const message = 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.'
+      dialog.showErrorBox('Conflicts', error.message)
     }
     if (stderr) console.warn(stderr)
     if (stdout) console.log(stdout)
