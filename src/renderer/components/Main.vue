@@ -90,8 +90,8 @@
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
   .sidebar {
-    min-width: 68px;
-    max-width: 68px;
+    min-width: 60px;
+    max-width: 60px;
     min-height: 100%;
     max-height: 100%;
     position: fixed;
@@ -105,15 +105,15 @@
   }
 
   .sidebar > a {
-    height: 68px;
-    line-height: 68px;
-    font-size: 36px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 32px;
     text-align: center;
     color: inherit;
   }
 
   .main {
-    margin-left: 68px;
+    margin-left: 60px;
     font-size: 20px;
   }
 </style>
