@@ -1,5 +1,5 @@
 <template>
-  <div class="row" :class="{selected: selected}" @click="$emit('selectTask', gid)">
+  <div class="row" :class="{selected: selected}" @click="$emit('selectTask', gid)" @click.right="$emit('multiSelectTask', gid)">
     <div class="col-status">
       <i :class="icon[status]"></i>
     </div>

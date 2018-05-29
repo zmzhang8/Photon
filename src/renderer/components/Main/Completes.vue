@@ -1,6 +1,6 @@
 <template>
   <div id="completes">
-    <div class="toolbar">
+    <div class="toolbar" @click="clearSelects()">
       <a @click="purgeTasks()"><i class="fas fa-trash"></i></a>
     </div>
     <div class="content">
@@ -16,7 +16,8 @@
         :uploadedSize="task.uploadedSize"
         :downloadSpeed="task.downloadSpeed"
         :uploadSpeed="task.uploadSpeed"
-        @selectTask="selectTask($event)">
+        @selectTask="selectTask($event)"
+        @multiSelectTask="multiSelectTask($event)">
       </task>
     </div>
   </div>
@@ -39,7 +40,14 @@
       }
     },
     methods: {
+      clearSelects: function () {
+        this.selects = {}
+      },
       selectTask: function (gid) {
+        this.selects = {}
+        this.$set(this.selects, gid, true)
+      },
+      multiSelectTask: function (gid) {
         let selects = this.selects
         if (selects[gid]) {
           this.$set(selects, gid, false)

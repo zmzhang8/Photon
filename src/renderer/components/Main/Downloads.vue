@@ -1,6 +1,6 @@
 <template>
   <div id="downloads">
-    <div class="toolbar">
+    <div class="toolbar" @click="clearSelects()">
       <router-link to="/newTask"><i class="fas fa-plus"></i></router-link>
       <a @click="startTasks()"><i class="fas fa-play"></i></a>
       <a @click="pauseTasks()"><i class="fas fa-pause"></i></a>
@@ -19,7 +19,8 @@
         :uploadedSize="task.uploadedSize"
         :downloadSpeed="task.downloadSpeed"
         :uploadSpeed="task.uploadSpeed"
-        @selectTask="selectTask($event)">
+        @selectTask="selectTask($event)"
+        @multiSelectTask="multiSelectTask($event)">
       </task>
     </div>
   </div>
@@ -42,11 +43,17 @@
       }
     },
     methods: {
+      clearSelects: function () {
+        this.selects = {}
+      },
       selectTask: function (gid) {
+        this.selects = {}
+        this.$set(this.selects, gid, true)
+      },
+      multiSelectTask: function (gid) {
         let selects = this.selects
-        if (selects.hasOwnProperty(gid)) {
+        if (selects[gid]) {
           this.$set(selects, gid, false)
-          delete selects[gid]
         } else this.$set(selects, gid, true)
       },
       startTasks: function () {
