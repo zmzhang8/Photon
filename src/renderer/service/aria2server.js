@@ -16,6 +16,36 @@ export default class Aria2Server {
     }
   }
 
+  startTasks (gids = []) {
+    this.handler.unpause(gids, result => {
+      this.syncTasks()
+    })
+  }
+
+  startTasksAll () {
+    this.handler.unpauseAll(result => {
+      this.syncTasks()
+    })
+  }
+
+  pauseTasks (gids = []) {
+    this.handler.pause(gids, result => {
+      this.syncTasks()
+    })
+  }
+
+  pauseTasksAll () {
+    this.handler.pauseAll(result => {
+      this.syncTasks()
+    })
+  }
+
+  removeTasks (gids = []) {
+    this.handler.remove(gids, result => {
+      this.syncTasks()
+    })
+  }
+
   purgeTasks (gids = []) {
     this.handler.removeDownloadResult(gids, result => {
       this.syncTasks()

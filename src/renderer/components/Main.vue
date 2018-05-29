@@ -15,6 +15,9 @@
         :alias="server.name"
         :rpc="server.rpc"
         :options="server.options"
+        @startTasks="startTasks($event)"
+        @pauseTasks="pauseTasks($event)"
+        @removeTasks="removeTasks($event)"
         @purgeTasks="purgeTasks($event)"
         @updateSettings="updateSettings()">
       </router-view>
@@ -47,6 +50,17 @@
     methods: {
       syncOptions: function () {
         this.server.syncOptions()
+      },
+      startTasks: function (gids) {
+        if (gids.length === 0) this.server.startTasksAll()
+        else this.server.startTasks(gids)
+      },
+      pauseTasks: function (gids) {
+        if (gids.length === 0) this.server.pauseTasksAll()
+        else this.server.pauseTasks(gids)
+      },
+      removeTasks: function (gids) {
+        this.server.removeTasks(gids)
       },
       purgeTasks: function (gids) {
         if (gids.length === 0) this.server.purgeTasksAll()
