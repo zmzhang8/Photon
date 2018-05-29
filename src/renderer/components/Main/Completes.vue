@@ -1,8 +1,7 @@
 <template>
   <div id="completes">
     <div class="toolbar">
-      <div><i class="fas fa-trash"></i></div>
-      <div><i class="fas fa-folder-open"></i></div>
+      <a @click="purgeTasks()"><i class="fas fa-trash"></i></a>
     </div>
     <div class="content">
       <task v-for="task in completes"
@@ -34,13 +33,21 @@
         selects: {}
       }
     },
+    computed: {
+      checkedList: function () {
+        return Object.keys(this.selects).filter(key => this.selects[key])
+      }
+    },
     methods: {
       selectTask: function (gid) {
         let selects = this.selects
-        if (selects.hasOwnProperty(gid)) {
+        if (selects[gid]) {
           this.$set(selects, gid, false)
-          delete selects[gid]
         } else this.$set(selects, gid, true)
+      },
+      purgeTasks: function () {
+        this.$emit('purgeTasks', this.checkedList)
+        this.selects = {}
       }
     }
   }

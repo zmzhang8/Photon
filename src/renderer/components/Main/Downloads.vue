@@ -1,10 +1,10 @@
 <template>
   <div id="downloads">
     <div class="toolbar">
-      <div><i class="fas fa-plus"></i></div>
-      <div><i class="fas fa-play"></i></div>
-      <div><i class="fas fa-pause"></i></div>
-      <div><i class="fas fa-times"></i></div>
+      <a><i class="fas fa-plus"></i></a>
+      <a><i class="fas fa-play"></i></a>
+      <a><i class="fas fa-pause"></i></a>
+      <a><i class="fas fa-times"></i></a>
     </div>
     <div class="content">
       <task v-for="task in downloads"

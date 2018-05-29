@@ -8,10 +8,17 @@
   background-color: white;
   font-size: 24px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
-.toolbar > div {
-  margin: 0px 12px;
+.toolbar > a {
+  flex: 0 0 48px;
+  line-height: 48px;
   text-align: center;
+}
+
+.toolbar > a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  color: #000;
 }

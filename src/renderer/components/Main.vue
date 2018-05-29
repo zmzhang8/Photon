@@ -15,6 +15,7 @@
         :alias="server.name"
         :rpc="server.rpc"
         :options="server.options"
+        @purgeTasks="purgeTasks($event)"
         @updateSettings="updateSettings()">
       </router-view>
     </div>
@@ -24,11 +25,6 @@
 <script>
   export default {
     props: ['server', 'serverNameList', 'isDefault'],
-    data: function () {
-      return {
-        selects: new Set()
-      }
-    },
     computed: {
       downloads: function () {
         let tasks = this.server.tasks
@@ -51,6 +47,10 @@
     methods: {
       syncOptions: function () {
         this.server.syncOptions()
+      },
+      purgeTasks: function (gids) {
+        if (gids.length === 0) this.server.purgeTasksAll()
+        else this.server.purgeTasks(gids)
       },
       updateSettings: function () {
         let server = this.server

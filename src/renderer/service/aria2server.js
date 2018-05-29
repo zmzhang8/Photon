@@ -16,6 +16,18 @@ export default class Aria2Server {
     }
   }
 
+  purgeTasks (gids = []) {
+    this.handler.removeDownloadResult(gids, result => {
+      this.syncTasks()
+    })
+  }
+
+  purgeTasksAll () {
+    this.handler.purgeDownloadResult(result => {
+      this.syncTasks()
+    })
+  }
+
   syncTasks () {
     let handler = this.handler
     let tasks = this.tasks
