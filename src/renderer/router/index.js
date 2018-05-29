@@ -8,25 +8,31 @@ export default new Router({
     path: '/',
     name: 'main',
     component: require('@/components/Main').default,
-    children: [{
-      path: 'downloads',
-      name: 'downloads',
-      component: require('@/components/Main/Downloads').default
-    },
-    {
-      path: 'completes',
-      name: 'completes',
-      component: require('@/components/Main/Completes').default
-    },
-    {
-      path: 'settings',
-      name: 'settings',
-      component: require('@/components/Main/Settings').default
-    },
-    {
-      path: '*',
-      redirect: 'downloads'
-    }
+    children: [
+      {
+        path: 'downloads',
+        name: 'downloads',
+        component: require('@/components/Main/Downloads').default
+      },
+      {
+        path: 'completes',
+        name: 'completes',
+        component: require('@/components/Main/Completes').default
+      },
+      {
+        path: 'settings',
+        name: 'settings',
+        component: require('@/components/Main/Settings').default
+      },
+      {
+        path: 'newTask',
+        name: 'newTask',
+        component: require('@/components/Main/NewTask').default
+      },
+      {
+        path: '*',
+        redirect: 'downloads'
+      }
     ]
   },
   {

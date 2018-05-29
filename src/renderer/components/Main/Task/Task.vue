@@ -79,7 +79,7 @@
     flex: 0 0 32px;
     font-size: 20px;
     text-align: center;
-    color: #555;
+    color: #666;
   }
 
   .row > .col-info {

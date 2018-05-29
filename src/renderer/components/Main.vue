@@ -15,6 +15,7 @@
         :alias="server.name"
         :rpc="server.rpc"
         :options="server.options"
+        @addTask="addTask($event)"
         @startTasks="startTasks($event)"
         @pauseTasks="pauseTasks($event)"
         @removeTasks="removeTasks($event)"
@@ -50,6 +51,13 @@
     methods: {
       syncOptions: function () {
         this.server.syncOptions()
+      },
+      addTask: function (info) {
+        let server = this.server
+        if (info.file) {
+          if (info.type === 'torrent') server.addTorrent(info.file, info.seeding)
+          else if (info.type === 'metalink') server.addMetalink(info.file, info.seeding)
+        } else server.addUrls(info.urls, info.seeding)
       },
       startTasks: function (gids) {
         if (gids.length === 0) this.server.startTasksAll()

@@ -59,6 +59,10 @@ input, textarea, select {
   font-size: 16px;
 }
 
+textarea {
+  height: 160px;
+}
+
 input[type=text], input[type=password], textarea {
   width: 100%;
 }
@@ -68,7 +72,7 @@ input[type=number], select{
 }
 
 input:focus, textarea:focus {
-  border: 1px solid #555;
+  border: 1px solid #666;
 }
 
 input:invalid {
@@ -86,6 +90,7 @@ input:disabled {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fafafa;
+  text-align: center;
   font-size: 16px;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -93,16 +98,21 @@ input:disabled {
 .button:hover {
   text-decoration: none;
   cursor: pointer;
-  border: 1px solid #555;
+  border: 1px solid #666;
 }
 
 .button-large {
+  min-width: 64px;
   padding: 8px 16px;
   font-size: 20px;
 }
 
 .vspace {
   margin: 12px 0 0 0;
+}
+
+.hspace {
+  margin: 0 0 0 16px;
 }
 
 .hidden {

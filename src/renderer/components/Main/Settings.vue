@@ -133,7 +133,7 @@
     methods: {
       setDir: function (event) {
         let files = event.target.files
-        if (files.length !== 0) {
+        if (files.length) {
           this.settings.options['dir'] = files[0].path
         }
       },

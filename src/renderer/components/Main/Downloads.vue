@@ -1,7 +1,7 @@
 <template>
   <div id="downloads">
     <div class="toolbar">
-      <a><i class="fas fa-plus"></i></a>
+      <router-link to="/newTask"><i class="fas fa-plus"></i></router-link>
       <a @click="startTasks()"><i class="fas fa-play"></i></a>
       <a @click="pauseTasks()"><i class="fas fa-pause"></i></a>
       <a @click="removeTasks()"><i class="fas fa-times"></i></a>

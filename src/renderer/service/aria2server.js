@@ -16,6 +16,27 @@ export default class Aria2Server {
     }
   }
 
+  addUrls (urls = [], seeding = false) {
+    let options = seeding ? this._defaultSeedingOptions() : {}
+    this.handler.addUri(urls, options, result => {
+      this.syncTasks()
+    })
+  }
+
+  addTorrent (torrent, seeding = false) {
+    let options = seeding ? this._defaultSeedingOptions() : {}
+    this.handler.addTorrent(torrent, options, result => {
+      this.syncTasks()
+    })
+  }
+
+  addMetalink (metalink, seeding = false) {
+    let options = seeding ? this._defaultSeedingOptions() : {}
+    this.handler.addTorrent(metalink, options, result => {
+      this.syncTasks()
+    })
+  }
+
   startTasks (gids = []) {
     this.handler.unpause(gids, result => {
       this.syncTasks()
@@ -140,6 +161,13 @@ export default class Aria2Server {
       'max-concurrent-downloads': 5,
       'max-overall-download-limit': 0,
       'max-overall-upload-limit': 262144
+    }
+  }
+
+  _defaultSeedingOptions () {
+    return {
+      'seed-time': '43200',
+      'seed-ratio': '10'
     }
   }
 }
