@@ -28,11 +28,9 @@ new Vue({
 const AppData = require('@/service/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
 
-let server = aria2manager.servers[0]
 let blocker
-
 setInterval(() => {
-  if (server.isActive()) {
+  if (aria2manager.servers[0].isActive()) {
     if (blocker === undefined || !powerSaveBlocker.isStarted(blocker)) blocker = powerSaveBlocker.start('prevent-app-suspension')
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)
@@ -40,5 +38,5 @@ setInterval(() => {
 }, 60000)
 
 app.on('will-quit', () => {
-  AppData.writeData(server.options)
+  AppData.writeData(aria2manager.servers[0].options)
 })
