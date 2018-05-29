@@ -1,7 +1,7 @@
 <template>
   <div id="settings">
     <div class="content">
-      <form>
+      <form @change="$emit('updateSettings')">
         <div id="settings-config" class="group" v-if="!settings.isDefault">
           <div class="header">Config</div>
           <div class="row">
@@ -105,9 +105,6 @@
               </select>
             </div>
           </div>
-        </div>
-        <div id="settings-save" class="row vspace">
-          <span class="button button-large" @click="$emit('updateSettings')">Save</span>
         </div>
       </form>
     </div>
