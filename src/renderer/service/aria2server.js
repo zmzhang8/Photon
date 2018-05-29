@@ -134,7 +134,7 @@ export default class Aria2Server {
     return {
       gid: task['gid'],
       status: task['status'],
-      name: task.hasOwnProperty('bittorrent') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
+      name: task.hasOwnProperty('bittorrent') && task['bittorrent'].hasOwnProperty('info') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
       totalSize: bytesToString(task['totalLength'], 2),
       completedSize: bytesToString(task['completedLength'], 2),
       completedPercentage: Math.round(task['completedLength'] / task['totalLength'] * 100) || 0,

@@ -10,7 +10,7 @@ Vue.config.productionTip = false
 
 let aria2manager = new Aria2Manager()
 aria2manager.syncTasksAll()
-aria2manager.setSyncInterval(3000)
+aria2manager.setSyncInterval(1000)
 
 new Vue({
   components: {
