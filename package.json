@@ -1,6 +1,6 @@
 {
   "name": "photon",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Alan Zhang <alandevel@outlook.com>",
   "description": "A lightweight downloader based on aria2",
   "license": "Apache-2.0",
