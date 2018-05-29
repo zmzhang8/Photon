@@ -60,19 +60,19 @@
         } else server.addUrls(info.urls, info.seeding)
       },
       startTasks: function (gids) {
-        if (gids.length === 0) this.server.startTasksAll()
-        else this.server.startTasks(gids)
+        if (gids.length === this.downloads.length) this.server.startTasksAll()
+        else if (gids.length !== 0) this.server.startTasks(gids)
       },
       pauseTasks: function (gids) {
-        if (gids.length === 0) this.server.pauseTasksAll()
-        else this.server.pauseTasks(gids)
+        if (gids.length === this.downloads.length) this.server.pauseTasksAll()
+        else if (gids.length !== 0) this.server.pauseTasks(gids)
       },
       removeTasks: function (gids) {
-        this.server.removeTasks(gids)
+        if (gids.length !== 0) this.server.removeTasks(gids)
       },
       purgeTasks: function (gids) {
-        if (gids.length === 0) this.server.purgeTasksAll()
-        else this.server.purgeTasks(gids)
+        if (gids.length === this.completes.length) this.server.purgeTasksAll()
+        else if (gids.length !== 0) this.server.purgeTasks(gids)
       },
       updateSettings: function () {
         let server = this.server

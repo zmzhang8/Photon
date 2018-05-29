@@ -44,7 +44,7 @@
         urls: '',
         file: undefined,
         filePath: '',
-        seeding: false
+        seeding: true
       }
     },
     computed: {

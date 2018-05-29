@@ -2,9 +2,11 @@
   <div id="downloads">
     <div class="toolbar">
       <router-link to="/newTask"><i class="fas fa-plus"></i></router-link>
+      <div class="seperator-h"></div>
       <a @click="startTasks()"><i class="fas fa-play"></i></a>
       <a @click="pauseTasks()"><i class="fas fa-pause"></i></a>
       <a @click="removeTasks()"><i class="fas fa-times"></i></a>
+      <a @click="selectAll()"><i class="fas fa-list"></i></a>
     </div>
     <div class="content">
       <task v-for="task in downloads"
@@ -52,6 +54,15 @@
         if (selects[gid]) {
           this.$set(selects, gid, false)
         } else this.$set(selects, gid, true)
+      },
+      selectAll: function () {
+        if (this.checkedList.length === this.downloads.length) {
+          this.selects = {}
+        } else {
+          this.downloads.forEach(task => {
+            this.$set(this.selects, task.gid, true)
+          })
+        }
       },
       startTasks: function () {
         this.$emit('startTasks', this.checkedList)

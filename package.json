@@ -1,12 +1,16 @@
 {
   "name": "photon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Alan Zhang <alandevel@outlook.com>",
   "description": "A lightweight downloader based on aria2",
   "license": "Apache-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
+    "build:mac": "node .electron-vue/build.js && electron-builder --mac",
+    "build:win": "node .electron-vue/build.js && electron-builder --win",
+    "build:linux": "node .electron-vue/build.js && electron-builder --linux",
+    "build:all": "node .electron-vue/build.js && electron-builder -mw",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",

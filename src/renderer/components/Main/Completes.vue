@@ -2,6 +2,7 @@
   <div id="completes">
     <div class="toolbar">
       <a @click="purgeTasks()"><i class="fas fa-trash"></i></a>
+      <a @click="selectAll()"><i class="fas fa-list"></i></a>
     </div>
     <div class="content">
       <task v-for="task in completes"
@@ -49,6 +50,15 @@
         if (selects[gid]) {
           this.$set(selects, gid, false)
         } else this.$set(selects, gid, true)
+      },
+      selectAll: function () {
+        if (this.checkedList.length === this.completes.length) {
+          this.selects = {}
+        } else {
+          this.completes.forEach(task => {
+            this.$set(this.selects, task.gid, true)
+          })
+        }
       },
       purgeTasks: function () {
         this.$emit('purgeTasks', this.checkedList)

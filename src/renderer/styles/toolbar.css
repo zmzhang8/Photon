@@ -26,3 +26,8 @@
   cursor: pointer;
   color: #000;
 }
+
+.seperator-h {
+  margin: 12px 12px;
+  border: 1px dashed #aaa;
+}

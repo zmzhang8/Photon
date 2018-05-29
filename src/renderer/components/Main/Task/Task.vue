@@ -73,6 +73,12 @@
     align-items: center;
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
+    user-select: none;
+  }
+
+  .row:hover {
+    text-decoration: none;
+    cursor: default;
   }
 
   .row > .col-status {
