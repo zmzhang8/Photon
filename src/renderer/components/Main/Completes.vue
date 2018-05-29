@@ -1,6 +1,6 @@
 <template>
   <div id="completes">
-    <div class="toolbar" @click="clearSelects()">
+    <div class="toolbar">
       <a @click="purgeTasks()"><i class="fas fa-trash"></i></a>
     </div>
     <div class="content">
@@ -40,9 +40,6 @@
       }
     },
     methods: {
-      clearSelects: function () {
-        this.selects = {}
-      },
       selectTask: function (gid) {
         this.selects = {}
         this.$set(this.selects, gid, true)

@@ -1,6 +1,6 @@
 <template>
   <div id="downloads">
-    <div class="toolbar" @click="clearSelects()">
+    <div class="toolbar">
       <router-link to="/newTask"><i class="fas fa-plus"></i></router-link>
       <a @click="startTasks()"><i class="fas fa-play"></i></a>
       <a @click="pauseTasks()"><i class="fas fa-pause"></i></a>
@@ -43,9 +43,6 @@
       }
     },
     methods: {
-      clearSelects: function () {
-        this.selects = {}
-      },
       selectTask: function (gid) {
         this.selects = {}
         this.$set(this.selects, gid, true)
