@@ -29,5 +29,8 @@
 </script>
 
 <style>
-  /* CSS */
+  body {
+    margin: 0px;
+    background-color: #fff;
+  }
 </style>

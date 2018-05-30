@@ -14,7 +14,7 @@ import {
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-const windowWidth = process.env.NODE_ENV === 'development' ? 1200 : 800
+const windowWidth = process.env.NODE_ENV === 'development' ? 1300 : 900
 
 let aria2process
 let mainWindow
@@ -101,6 +101,7 @@ const menuTemplate = [{
 app.on('ready', () => {
   createWindow()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+  mainWindow.setMenu(null)
   aria2process = startAria2()
 })
 
@@ -172,8 +173,9 @@ function startAria2 () {
   return exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(error.message)
-      // const message = 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.'
-      dialog.showErrorBox('Conflicts', error.message)
+      const message = 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.'
+      dialog.showErrorBox('Warning', message)
+      app.quit()
     }
     if (stderr) console.warn(stderr)
     if (stdout) console.log(stdout)
