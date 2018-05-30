@@ -35,48 +35,10 @@ export default class Aria2RPC {
     this._request(method, params, successCallback, errorCallback)
   }
 
-  remove (gids, successCallback, errorCallback) {
-    const method = 'remove'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  pause (gids, successCallback, errorCallback) {
-    const method = 'pause'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  pauseAll (successCallback, errorCallback) {
-    const method = 'pauseAll'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  unpause (gids, successCallback, errorCallback) {
-    const method = 'unpause'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  unpauseAll (successCallback, errorCallback) {
-    const method = 'unpauseAll'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   tellStatus (gids, successCallback, errorCallback) {
     const method = 'tellStatus'
     if (gids.constructor !== Array) gids = [gids]
     let paramsPool = gids.map(gid => [gid, this._taskStatusKeys])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  getUris (gids, successCallback, errorCallback) {
-    const method = 'getUris'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -95,11 +57,6 @@ export default class Aria2RPC {
     this._request(method, [0, this._maxTaskNumber, this._taskStatusKeys], successCallback, errorCallback)
   }
 
-  getGlobalOption (successCallback, errorCallback) {
-    const method = 'getGlobalOption'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   changeGlobalOption (options = {}, successCallback, errorCallback) {
     const method = 'changeGlobalOption'
     let param = {}
@@ -109,36 +66,11 @@ export default class Aria2RPC {
     this._request(method, [param], successCallback, errorCallback)
   }
 
-  getGlobalStat (successCallback, errorCallback) {
-    const method = 'getGlobalStat'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  purgeDownloadResult (successCallback, errorCallback) {
-    const method = 'purgeDownloadResult'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   removeDownloadResult (gids, successCallback, errorCallback) {
     const method = 'removeDownloadResult'
     if (gids.constructor !== Array) gids = [gids]
     let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  getVersion (successCallback, errorCallback) {
-    const method = 'getVersion'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  shutdown (successCallback, errorCallback) {
-    const method = 'shutdown'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  saveSession (successCallback, errorCallback) {
-    const method = 'saveSession'
-    this._request(method, [], successCallback, errorCallback)
   }
 
   _request (method, params, successCallback, errorCallback) {
@@ -177,3 +109,37 @@ export default class Aria2RPC {
     }
   }
 }
+
+// 生成方法
+[
+  'saveSession',
+  'shutdown',
+  'getVersion',
+  'purgeDownloadResult',
+  'getGlobalStat',
+  'getGlobalOption',
+  'unpauseAll',
+  'pauseAll'
+].forEach(method => {
+  Reflect.defineProperty(Aria2RPC.prototype, method, {
+    value: function (successCallback, errorCallback) {
+      this._request(method, [], successCallback, errorCallback)
+    }
+  })
+});
+
+// 生成方法
+[
+  'remove',
+  'pause',
+  'unpause',
+  'getUris'
+].forEach(method => {
+  Reflect.defineProperty(Aria2RPC.prototype, method, {
+    value: function (gids, successCallback, errorCallback) {
+      if (gids.constructor !== Array) gids = [gids]
+      let paramsPool = gids.map(gid => [gid])
+      this._batchRequest(method, paramsPool, successCallback, errorCallback)
+    }
+  })
+})
