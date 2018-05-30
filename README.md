@@ -21,10 +21,10 @@ Latest releases: https://github.com/alanzhangzm/Photon/releases
 
 Since *Photon* uses aria2 as download core, all of the extensions that support aria2 via RPC are also *Photon* compatible.
 The default RPC configuration for *Photon* and aria2:
-> URL: http://127.0.0.1:6800/jsonrpc
-> Address: 127.0.0.1
-> Port: 6800
-> Protocol: HTTP
+> - URL: http://127.0.0.1:6800/jsonrpc
+> - Address: 127.0.0.1
+> - Port: 6800
+> - Protocol: HTTP
 
 Some popular aria2 extensions:
 - [BaiduExporter](https://github.com/acgotaku/BaiduExporter)
