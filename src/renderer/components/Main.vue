@@ -2,10 +2,10 @@
   <div class="wrapper">
     <div class="sidebar">
       <div id="sidebar-servers" class="row" style="padding-bottom: 0;">
-        <div class="icon">
+        <div class="icon" @click="onClickHeiHeiHei">
           <img src="@/assets/logo.png" class="logo">
         </div>
-        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{serverName}}</div>
+        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{heiheihei||serverName}}</div>
       </div>
       <div class="seperator-v"></div>
       <router-link to="/downloads" id="sidebar-downloads" class="row">
@@ -52,7 +52,20 @@
 </template>
 
 <script>
+
+  import _ from 'lodash'
+
+  // 彩蛋专用数据
+  // see: https://github.com/janlelis/unicode-confusable
+  const O_Confusable= ["ం", "ಂ", "ം", "ං", "०", "੦", "૦", "௦", "౦", "೦", "൦", "๐", "໐", "၀", "٥", "۵", "ｏ", "ℴ", "𝐨", "𝑜", "𝒐", "𝓸", "𝔬", "𝕠", "𝖔", "𝗈", "𝗼", "𝘰", "𝙤", "𝚘", "ᴏ", "ᴑ", "ꬽ", "ο", "𝛐", "𝜊", "𝝄", "𝝾", "𝞸", "σ", "𝛔", "𝜎", "𝝈", "𝞂", "𝞼", "ⲟ", "о", "ჿ", "օ", "ס", "ه", "𞸤", "𞹤", "𞺄", "ﻫ", "ﻬ", "ﻪ", "ﻩ", "ھ", "ﮬ", "ﮭ", "ﮫ", "ﮪ", "ہ", "ﮨ", "ﮩ", "ﮧ", "ﮦ", "ە", "ഠ", "ဝ", "𐓪", "𑣈", "𑣗", "𐐬"]
+
   export default {
+    data(){
+      return {
+        // 彩蛋专用数据
+        heiheihei:'',
+      }
+    },
     props: ['server', 'serverNameList', 'isDefault'],
     computed: {
       serverName: function () {
@@ -81,6 +94,10 @@
       }
     },
     methods: {
+      // 彩蛋
+      onClickHeiHeiHei(){
+        this.heiheihei=this.serverName.replace(/o/g, _.sample(O_Confusable))
+      },
       syncOptions: function () {
         this.server.syncOptions()
       },
