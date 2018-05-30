@@ -1,11 +1,10 @@
 # Photon
----
-
 
 ## About
 
 *Photon* is a lightweight downloader based on aria2. It supports **HTTP/HTTPS**, **FTP**, **SFTP**, **Magnet links**, **BitTorrent** and **Metalink**.
-*Photon* is cross platform. It has **macOS** and **windows** release now, and will have Linux release soon.
+
+*Photon* is cross platform. It has **macOS** and **windows** releases now and will have Linux release soon.
 
 
 ## Screenshots
@@ -20,7 +19,7 @@
 Latest releases: https://github.com/alanzhangzm/Photon/releases
 
 
-## Extensions
+## Extensions
 
 Since *Photon* uses aria2 as download core, all of the extensions that support aria2 via RPC are also *Photon* compatible.
 The default RPC configuration for *Photon* and aria2:
@@ -32,9 +31,9 @@ The default RPC configuration for *Photon* and aria2:
 Some popular aria2 extensions:
 - [BaiduExporter](https://github.com/acgotaku/BaiduExporter)
 - [ThunderLixianExporter](https://github.com/binux/ThunderLixianExporter)
+
+
 ## Development
-
-
 
 ``` bash
 # install dependencies
