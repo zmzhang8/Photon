@@ -5,28 +5,35 @@
     </div>
     <div class="col-info">
       <div class="title" :title="alias">{{alias}}</div>
-      <div class="small" v-if="totalSize !== '0'">{{totalSize}}</div>
+      <div class="small" v-if="totalSize !== '0'">{{bytesToString(totalSize, 2)}}</div>
+      <div>
+        <span  @click="onClickOpenFile" v-if="completed">打开文件</span>
+        <span  @click="onClickOpenFolder">打开所在文件夹</span>
+      </div>
     </div>
     <div class="col-progress">
       <div class="progress-bar">
         <div class="progress" :style="{width: completedPercentage + '%'}"></div>
       </div>
       <div class="small">
-        <div>{{remainingTime}}</div>
+        <div>{{secondsToString(remainingTime)}}</div>
         <div>{{completedPercentage + '%'}}</div>
       </div>
     </div>
     <div class="col-speed"  v-if="!completed">
-      <div v-if="downloadSpeed !== '0'">{{downloadSpeed + 'B/s'}}</div>
+      <div v-if="downloadSpeed !== '0'">{{bytesToString(downloadSpeed,1) + 'B/s'}}</div>
       <div v-if="completedPercentage === 100 && uploadSpeed !== '0'">
-        <div><i class="far fa-arrow-alt-circle-up"></i> {{uploadSpeed + 'B/s'}}</div>
-        <div class="small" v-if="uploadedSize !== '0'">{{uploadedSize}}</div>
+        <div><i class="far fa-arrow-alt-circle-up"></i> {{bytesToString(uploadSpeed,1) + 'B/s'}}</div>
+        <div class="small" v-if="uploadedSize !== '0'">{{bytesToString(uploadedSize, 2)}}</div>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
+  import {bytesToString, secondsToString} from '../../../service/converter.js'
+  const {shell} = require('electron')
   export default {
     props: [
       'selected',
@@ -38,7 +45,8 @@
       'remainingTime',
       'uploadedSize',
       'downloadSpeed',
-      'uploadSpeed'
+      'uploadSpeed',
+      'path',
     ],
     data: function () {
       return {
@@ -56,6 +64,17 @@
       completed: function () {
         return this.status === 'complete' || this.status === 'removed' || this.status === 'error'
       }
+    },
+    methods:{
+      secondsToString,
+      bytesToString,
+
+      onClickOpenFile(){
+        shell.openItem(this.path)
+      },
+      onClickOpenFolder(){
+        shell.showItemInFolder(this.path)
+      },
     }
   }
 </script>

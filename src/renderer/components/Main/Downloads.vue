@@ -21,6 +21,8 @@
         :uploadedSize="task.uploadedSize"
         :downloadSpeed="task.downloadSpeed"
         :uploadSpeed="task.uploadSpeed"
+        :dir="task.dir"
+        :path="task.path"
         @selectTask="selectTask($event)"
         @multiSelectTask="multiSelectTask($event)">
       </task>
