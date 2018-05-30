@@ -1,9 +1,34 @@
 <template>
   <div class="wrapper">
     <div class="sidebar">
-      <router-link to="/downloads"><i class="fas fa-arrow-down"></i></router-link>
-      <router-link to="/completes"><i class="fas fa-check"></i></router-link>
-      <router-link to="/settings" @click.native="syncOptions()"><i class="fas fa-cog"></i></router-link>
+      <div id="sidebar-servers" class="row" style="padding-bottom: 0;">
+        <div class="icon">
+          <img src="@/assets/logo.png" class="logo">
+        </div>
+        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{serverName}}</div>
+      </div>
+      <div class="seperator-v"></div>
+      <router-link to="/downloads" id="sidebar-downloads" class="row">
+        <div class="icon">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+        <div class="title">Downloads</div>
+        <div class="status" v-if="activeNumber">
+          <span class="bubble">{{activeNumber}}</span>
+        </div>
+      </router-link>
+      <router-link to="/completes" id="sidebar-completes" class="row">
+        <div class="icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <div class="title">Completed</div>
+      </router-link>
+      <router-link to="/settings" id="sidebar-settings" class="row" @click.native="syncOptions()">
+        <div class="icon">
+          <i class="fas fa-cog"></i>
+        </div>
+        <div class="title">Settings</div>
+      </router-link>
     </div>
 
     <div class="main">
@@ -30,6 +55,13 @@
   export default {
     props: ['server', 'serverNameList', 'isDefault'],
     computed: {
+      serverName: function () {
+        return this.isDefault ? 'Photon' : this.server.name
+      },
+      activeNumber: function () {
+        let tasks = this.server.tasks
+        return tasks.active.length + tasks.waiting.length
+      },
       downloads: function () {
         let tasks = this.server.tasks
         return tasks.active.concat(tasks.waiting).concat(tasks.paused)
@@ -90,30 +122,74 @@
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
   .sidebar {
-    min-width: 60px;
-    max-width: 60px;
+    min-width: 200px;
+    max-width: 200px;
     min-height: 100%;
     max-height: 100%;
     position: fixed;
     top: 0px;
     left: 0px;
-    color: #dddddd;
     background-color: #444444;
     display: flex;
     flex-direction: column;
     align-items: stretch;
   }
 
-  .sidebar > a {
-    height: 60px;
-    line-height: 60px;
-    font-size: 32px;
+  .router-link-active {
+    background-color: #00A0F1;
+  }
+
+  .sidebar > .row {
+    padding: 12px 12px;
+    color: #dddddd;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+
+  .row > .icon {
+    padding: 0 4px;
+    flex: 0 0 20px;
+    font-size: 20px;
+  }
+
+  .row > .title {
+    padding: 0 8px;
+    flex: 1 1 auto;
+  }
+
+  .row > .status {
+    padding: 0 8px;
+    font-size: 12px;
+    flex: 0 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+
+  .bubble {
+    min-width: 16px;
+    padding: 4px;
+    background-color: #0064C7;
+    border-radius: 16px;
     text-align: center;
-    color: inherit;
+  }
+
+  .logo {
+    height: 40px;
+    padding: 0 8px;
+  }
+
+  .seperator-v {
+    margin: 16px 16px;
+    border: 1px solid #666;
   }
 
   .main {
-    margin-left: 60px;
+    margin-left: 200px;
     font-size: 20px;
   }
 </style>

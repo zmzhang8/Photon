@@ -14,6 +14,7 @@ import {
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
+const windowWidth = process.env.NODE_ENV === 'development' ? 1200 : 800
 
 let aria2process
 let mainWindow
@@ -27,7 +28,7 @@ function createWindow () {
    */
   mainWindow = new BrowserWindow({
     useContentSize: true,
-    width: 800,
+    width: windowWidth,
     height: 600,
     minWidth: 800,
     minHeight: 600
