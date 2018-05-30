@@ -128,7 +128,6 @@ export default class Aria2Server {
   }
 
   _formatTask (task) {
-    console.log(task)
     return {
       gid: task['gid'],
       status: task['status'],
