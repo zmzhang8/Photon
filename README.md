@@ -1,6 +1,6 @@
 # Photon
 
-*Photon* is a lightweight downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink** download.
+*Photon* is a lightweight multi-threaded downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink** download.
 
 *Photon* is cross platform. It has **macOS** and **windows** releases now and will have Linux release soon.
 
