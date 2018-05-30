@@ -7,8 +7,8 @@
       <div class="title" :title="alias">{{alias}}</div>
       <div class="small" v-if="totalSize !== '0'">{{bytesToString(totalSize, 2)}}</div>
       <div>
-        <span  @click="onClickOpenFile" v-if="completed">打开文件</span>
-        <span  @click="onClickOpenFolder">打开所在文件夹</span>
+        <span class="link" @click="onClickOpenFile" v-if="completed">打开文件</span>
+        <span class="link" @click="onClickOpenFolder">打开所在文件夹</span>
       </div>
     </div>
     <div class="col-progress">
@@ -86,7 +86,7 @@
 
   .row {
     height: 60px;
-    padding: 0 8px;
+    padding: 4px 8px;
     border-bottom: 1px solid #ccc;
     display: flex;
     align-items: center;
@@ -161,4 +161,14 @@
     background-color: #D6ECFF;
   }
 
+  .link{
+    color: #0098FF;
+    font-size: 12px;
+  }
+  .link:hover{
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
 </style>
+
