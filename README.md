@@ -1,7 +1,5 @@
 # Photon
 
-## About
-
 *Photon* is a lightweight downloader based on aria2. It supports **HTTP/HTTPS**, **FTP**, **SFTP**, **Magnet links**, **BitTorrent** and **Metalink**.
 
 *Photon* is cross platform. It has **macOS** and **windows** releases now and will have Linux release soon.
