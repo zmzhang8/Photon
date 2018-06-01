@@ -8,7 +8,7 @@
         <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{easterEgg || serverName}}</div>
       </div>
       <div class="seperator-v"></div>
-      <router-link to="/downloads" id="sidebar-downloads" class="row">
+      <router-link to="/downloading" id="sidebar-downloading" class="row">
         <div class="icon">
           <i class="fas fa-arrow-down"></i>
         </div>
@@ -17,11 +17,11 @@
           <span class="bubble">{{activeNumber}}</span>
         </div>
       </router-link>
-      <router-link to="/completes" id="sidebar-completes" class="row">
+      <router-link to="/finished" id="sidebar-finished" class="row">
         <div class="icon">
           <i class="fas fa-check"></i>
         </div>
-        <div class="title">Completed</div>
+        <div class="title">Finished</div>
       </router-link>
       <router-link to="/settings" id="sidebar-settings" class="row" @click.native="syncOptions()">
         <div class="icon">
@@ -33,8 +33,8 @@
 
     <div class="main">
       <router-view
-        :downloads="downloads"
-        :completes="completes"
+        :downloading="downloading"
+        :finished="finished"
         :settings="settings"
         :connection="server.connection"
         :alias="server.name"
@@ -70,11 +70,11 @@
         let tasks = this.server.tasks
         return tasks.active.length + tasks.waiting.length
       },
-      downloads: function () {
+      downloading: function () {
         let tasks = this.server.tasks
         return tasks.active.concat(tasks.waiting).concat(tasks.paused)
       },
-      completes: function () {
+      finished: function () {
         return this.server.tasks.stopped
       },
       settings: function () {
@@ -103,18 +103,18 @@
         } else server.addUrls(info.urls, info.seeding)
       },
       startTasks: function (gids) {
-        if (gids.length === this.downloads.length) this.server.startTasksAll()
+        if (gids.length === this.downloading.length) this.server.startTasksAll()
         else if (gids.length !== 0) this.server.startTasks(gids)
       },
       pauseTasks: function (gids) {
-        if (gids.length === this.downloads.length) this.server.pauseTasksAll()
+        if (gids.length === this.downloading.length) this.server.pauseTasksAll()
         else if (gids.length !== 0) this.server.pauseTasks(gids)
       },
       removeTasks: function (gids) {
         if (gids.length !== 0) this.server.removeTasks(gids)
       },
       purgeTasks: function (gids) {
-        if (gids.length === this.completes.length) this.server.purgeTasksAll()
+        if (gids.length === this.finished.length) this.server.purgeTasksAll()
         else if (gids.length !== 0) this.server.purgeTasks(gids)
       },
       updateSettings: function () {

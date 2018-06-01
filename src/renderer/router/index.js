@@ -10,14 +10,14 @@ export default new Router({
     component: require('@/components/Main').default,
     children: [
       {
-        path: 'downloads',
-        name: 'downloads',
-        component: require('@/components/Main/Downloads').default
+        path: 'downloading',
+        name: 'downloading',
+        component: require('@/components/Main/Downloading').default
       },
       {
-        path: 'completes',
-        name: 'completes',
-        component: require('@/components/Main/Completes').default
+        path: 'finished',
+        name: 'finished',
+        component: require('@/components/Main/Finished').default
       },
       {
         path: 'settings',
@@ -31,7 +31,7 @@ export default new Router({
       },
       {
         path: '*',
-        redirect: 'downloads'
+        redirect: 'downloading'
       }
     ]
   },

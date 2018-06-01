@@ -143,7 +143,7 @@ app.on('ready', () => {
 
 // aria2
 function startAria2 () {
-  const AppData = require('../renderer/service/appdata').default
+  const AppData = require('./appdata').default
   const exec = require('child_process').exec
   const join = require('path').join
   const platform = require('os').platform()

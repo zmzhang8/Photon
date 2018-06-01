@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import Aria2Manager from '@/service/aria2manager'
+import Aria2Manager from '@/utils/aria2manager'
 
 import App from './App'
 import router from './router'
@@ -17,15 +17,14 @@ new Vue({
     App
   },
   router,
-  template: '<App :manager="manager" :serverId="serverId"></App>',
+  template: '<App :manager="manager"></App>',
   data: {
-    manager: aria2manager,
-    serverId: 0
+    manager: aria2manager
   }
 }).$mount('#app')
 
 // Desktop App
-const AppData = require('@/service/appdata').default
+const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
 
 let blocker

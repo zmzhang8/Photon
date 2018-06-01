@@ -12,7 +12,12 @@
 <script>
   export default {
     name: 'photon',
-    props: ['manager', 'serverId'],
+    props: ['manager'],
+    data: function () {
+      return {
+        serverId: 0
+      }
+    },
     computed: {
       serverNameList: function () {
         return this.manager.servers.map(server => {

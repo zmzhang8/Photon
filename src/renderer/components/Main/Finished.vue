@@ -1,5 +1,5 @@
 <template>
-  <div id="completes">
+  <div id="finished">
     <div class="toolbar">
       <a href="#" :class="{disabled: selectedList.length === 0}" @click="purgeTasks()">
         <i class="fas fa-trash"></i>
@@ -10,7 +10,7 @@
     </div>
 
     <div class="content">
-      <task v-for="task in completes"
+      <task v-for="task in finished"
         :key="task.gid"
         :selected="selected[task.gid]"
         :gid="task.gid"
@@ -34,7 +34,7 @@
 
   export default {
     components: { Task },
-    props: ['completes'],
+    props: ['finished'],
     data: function () {
       return {
         selected: {}
@@ -57,10 +57,10 @@
         } else this.$set(selected, gid, true)
       },
       selectAll: function () {
-        if (this.selectedList.length === this.completes.length) {
+        if (this.selectedList.length === this.finished.length) {
           this.selected = {}
         } else {
-          this.completes.forEach(task => {
+          this.finished.forEach(task => {
             this.$set(this.selected, task.gid, true)
           })
         }

@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  import Converter from '@/service/converter'
+  import Converter from '@/utils/converter'
 
   export default {
     props: ['settings'],

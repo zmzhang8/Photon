@@ -5,7 +5,7 @@
     </div>
     <div class="col-info">
       <div class="title" :title="alias">{{alias}}</div>
-      <div class="detail" v-if="totalLength !== '0'">{{bytesToString(totalLength, 2)}}</div>
+      <div class="detail" v-if="totalLength !== 0">{{bytesToString(totalLength, 2)}}</div>
     </div>
     <div class="col-progress">
       <div class="progress-bar">
@@ -24,7 +24,7 @@
 
 
 <script>
-  import Converter from '@/service/converter.js'
+  import Converter from '@/utils/converter.js'
 
   export default {
     props: [

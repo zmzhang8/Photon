@@ -1,5 +1,5 @@
 <template>
-  <div id="downloads">
+  <div id="downloading">
     <div class="toolbar">
       <router-link to="/newTask">
         <i class="fas fa-plus"></i>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="content">
-      <task v-for="task in downloads"
+      <task v-for="task in downloading"
         :key="task.gid + task.status"
         :selected="selected[task.gid]"
         :gid="task.gid"
@@ -46,7 +46,7 @@
 
   export default {
     components: { Task },
-    props: ['downloads'],
+    props: ['downloading'],
     data: function () {
       return {
         selected: {}
@@ -69,10 +69,10 @@
         } else this.$set(selected, gid, true)
       },
       selectAll: function () {
-        if (this.selectedList.length === this.downloads.length) {
+        if (this.selectedList.length === this.downloading.length) {
           this.selected = {}
         } else {
-          this.downloads.forEach(task => {
+          this.downloading.forEach(task => {
             this.$set(this.selected, task.gid, true)
           })
         }
