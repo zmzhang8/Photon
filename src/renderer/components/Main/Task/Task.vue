@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="col-speed"  v-if="!finished">
-      <div v-if="downloadSpeed !== '0'">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
+      <div v-if="downloadSpeed !== 0">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
     </div>
   </div>
 </template>
