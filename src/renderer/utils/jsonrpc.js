@@ -1,13 +1,10 @@
 export default class JSONRPC {
   constructor (namespace) {
-    this._version = '2.0'
-    this._id = '0'
-
     this._namespace = namespace
     this._date = new Date()
   }
 
-  request (url, method, params = [], id = this._id, successCallback, errorCallback) {
+  request (url, method, params = [], id, successCallback, errorCallback) {
     let data = this._getRequestData(method, params, id)
     this._fetch(url, data, successCallback, errorCallback)
   }
@@ -18,9 +15,9 @@ export default class JSONRPC {
     this._fetch(url, data, successCallback, errorCallback)
   }
 
-  _getRequestData (method, params = [], id = this._id) {
+  _getRequestData (method, params = [], id = '0') {
     return {
-      jsonrpc: this._version,
+      jsonrpc: '2.0',
       id: id,
       method: this._namespace + '.' + method,
       params: params.constructor === Array ? params : [params]
