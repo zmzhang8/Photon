@@ -1,11 +1,11 @@
 import JSONRPC from './jsonrpc'
 
+const id = 'qwer'
+const maxTaskNumber = 1000
+const taskStatusKeys = ['gid', 'status', 'totalLength', 'completedLength', 'uploadLength', 'downloadSpeed', 'uploadSpeed', 'connections', 'dir', 'files', 'bittorrent', 'errorCallbackCode', 'errorCallbackMessage']
+
 export default class Aria2RPC {
   constructor (address = '127.0.0.1', port = 6800, token = '', httpsEnabled = false) {
-    this._id = 'qwer'
-    this._maxTaskNumber = 1000
-    this._taskStatusKeys = ['gid', 'status', 'totalLength', 'completedLength', 'uploadLength', 'downloadSpeed', 'uploadSpeed', 'connections', 'dir', 'files', 'bittorrent', 'errorCallbackCode', 'errorCallbackMessage']
-
     this._url = (httpsEnabled ? 'https' : 'http') + '://' + address + ':' + port + '/jsonrpc'
     this._token = 'token:' + token
     this._jsonrpc = new JSONRPC('aria2')
@@ -69,7 +69,7 @@ export default class Aria2RPC {
   tellStatus (gids, successCallback, errorCallback) {
     const method = 'tellStatus'
     if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid, this._taskStatusKeys])
+    let paramsPool = gids.map(gid => [gid, taskStatusKeys])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -82,17 +82,17 @@ export default class Aria2RPC {
 
   tellActive (successCallback, errorCallback) {
     const method = 'tellActive'
-    this._request(method, [this._taskStatusKeys], successCallback, errorCallback)
+    this._request(method, [taskStatusKeys], successCallback, errorCallback)
   }
 
   tellWaiting (successCallback, errorCallback) {
     const method = 'tellWaiting'
-    this._request(method, [0, this._maxTaskNumber, this._taskStatusKeys], successCallback, errorCallback)
+    this._request(method, [0, maxTaskNumber, taskStatusKeys], successCallback, errorCallback)
   }
 
   tellStopped (successCallback, errorCallback) {
     const method = 'tellStopped'
-    this._request(method, [0, this._maxTaskNumber, this._taskStatusKeys], successCallback, errorCallback)
+    this._request(method, [0, maxTaskNumber, taskStatusKeys], successCallback, errorCallback)
   }
 
   getGlobalOption (successCallback, errorCallback) {
@@ -142,7 +142,7 @@ export default class Aria2RPC {
   }
 
   _request (method, params, successCallback, errorCallback) {
-    this._jsonrpc.request(this._url, method, [this._token].concat(params), this._id, result => {
+    this._jsonrpc.request(this._url, method, [this._token].concat(params), id, result => {
       this._resultHandler(method, result)
       if (typeof (successCallback) === 'function') successCallback(result.result)
     }, error => {
@@ -155,7 +155,7 @@ export default class Aria2RPC {
       return {
         method: method,
         params: [this._token].concat(params),
-        id: this._id
+        id: id
       }
     })
     this._jsonrpc.batchRequest(this._url, requests, results => {
