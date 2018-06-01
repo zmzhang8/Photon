@@ -146,6 +146,7 @@ export default class Aria2Server {
   }
 
   _formatTask (task) {
+    let pathDir = (path) => path.substr(0, path.lastIndexOf('/'))
     return {
       gid: task.gid,
       status: task.status,
@@ -157,8 +158,8 @@ export default class Aria2Server {
       uploadSpeed: parseInt(task.uploadSpeed),
       connections: parseInt(task.connections),
       dir: task.dir,
-      path: task.files.length === 1 ? task.files[0].path
-        : task.files.map(task => task.path.substr(0, task.path.lastIndexOf('/')))
+      path: pathDir(task.files[0].path) === task.dir ? task.files[0].path
+        : task.files.map(task => pathDir(task.path))
           .reduce((last, cur) => last.length <= cur.length ? last : cur)
     }
   }

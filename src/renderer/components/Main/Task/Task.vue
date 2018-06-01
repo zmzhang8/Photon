@@ -1,23 +1,26 @@
 <template>
   <div class="row" :class="{selected: selected}" @click.left.stop="onClick()" @click.right.stop="$emit('multiSelectTask', gid)">
     <div class="col-status">
-      <i :class="icon[preciseStatus]"></i>
+      <i :class="icon[status]"></i>
     </div>
     <div class="col-info">
       <div class="title" :title="alias">{{alias}}</div>
-      <div class="detail" v-if="totalLength !== 0">{{bytesToString(totalLength, 2)}}</div>
+      <div class="detail detail-left">
+        <div v-if="totalLength !== 0">{{bytesToString(totalLength, 2)}}</div>
+        <div style="margin-left: 16px;" v-if="uploadLength !== 0"><i class="far fa-arrow-alt-circle-up"></i> {{bytesToString(uploadLength)}}</div>
+      </div>
     </div>
     <div class="col-progress">
       <div class="progress-bar">
-        <div class="progress" :style="{width: completedPercentage}"></div>
+        <div class="progress" :class="{'progress-success': completed}" :style="{width: completedPercentage}"></div>
       </div>
       <div class="detail">
-        <div>{{secondsToString(remainingTime)}}</div>
-        <div>{{completedPercentage}}</div>
+        <div v-if="status ==='active' && !completed">{{secondsToString(remainingTime)}}</div>
+        <div v-if="status ==='active' && !completed">{{completedPercentage}}</div>
       </div>
     </div>
     <div class="col-speed"  v-if="!finished">
-      <div v-if="downloadSpeed !== 0">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
+      <div v-if="status ==='active' && !completed && downloadSpeed !== 0">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
     </div>
   </div>
 </template>
@@ -47,16 +50,15 @@
           paused: ['fas', 'fa-pause'],
           complete: ['fas', 'fa-check'],
           removed: ['fas', 'fa-times'],
-          error: ['fas', 'fa-exclamation'],
-          uploading: ['fas', 'fa-arrow-up']
+          error: ['fas', 'fa-exclamation']
         },
         clicks: 0,
         timer: undefined
       }
     },
     computed: {
-      preciseStatus: function () {
-        return this.status === 'active' && this.totalLength === this.completedLength ? 'uploading' : this.status
+      completed: function () {
+        return this.status === 'active' && this.completedLength === this.totalLength
       },
       finished: function () {
         return this.status === 'complete' || this.status === 'removed' || this.status === 'error'
@@ -91,6 +93,7 @@
 </script>
 
 <style lang="css" scoped>
+  @import "~@fortawesome/fontawesome-free-webfonts/css/fa-regular.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
@@ -152,6 +155,10 @@
     justify-content: space-between;
   }
 
+  .detail-left {
+    justify-content: flex-start;
+  }
+
   .progress-bar {
     height: 8px;
     border: 1px solid #ccc;
@@ -165,6 +172,10 @@
     width: 0%;
     border-radius: 8px;
     transition: width 0.6s ease;
+  }
+
+  .progress-bar .progress-success {
+    background-color: #00B246;
   }
 
   .selected {

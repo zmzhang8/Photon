@@ -12,7 +12,7 @@
         <div class="icon">
           <i class="fas fa-arrow-down"></i>
         </div>
-        <div class="title">Downloading</div>
+        <div class="title">Active</div>
         <div class="status" v-if="activeNumber">
           <span class="bubble">{{activeNumber}}</span>
         </div>
@@ -133,8 +133,8 @@
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
   .sidebar {
-    min-width: 208px;
-    max-width: 208px;
+    min-width: 180px;
+    max-width: 180px;
     min-height: 100%;
     max-height: 100%;
     position: fixed;
@@ -188,6 +188,7 @@
     color: #444;
     border-radius: 16px;
     text-align: center;
+    font-weight: 600;
   }
 
   .logo {
@@ -201,7 +202,7 @@
   }
 
   .main {
-    margin-left: 208px;
+    margin-left: 180px;
     font-size: 20px;
   }
 </style>
