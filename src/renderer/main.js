@@ -32,7 +32,7 @@ webFrame.setZoomLevelLimits(1, 1)
 
 let blocker
 setInterval(() => {
-  if (aria2manager.servers[0].isActive()) {
+  if (aria2manager.servers[0].isDownloading()) {
     if (blocker === undefined || !powerSaveBlocker.isStarted(blocker)) blocker = powerSaveBlocker.start('prevent-app-suspension')
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)

@@ -131,8 +131,8 @@ export default class Aria2Server {
     })
   }
 
-  isActive () {
-    return this.tasks.active.length !== 0
+  isDownloading () {
+    return this.tasks.active.some(task => task.completedLength !== task.totalLength)
   }
 
   setServer (name = 'Default', rpc = defaultRPC, options = defaultOptions, ignoreDir = true) {
@@ -156,7 +156,10 @@ export default class Aria2Server {
       downloadSpeed: parseInt(task.downloadSpeed),
       uploadSpeed: parseInt(task.uploadSpeed),
       connections: parseInt(task.connections),
-      dir: task.dir
+      dir: task.dir,
+      path: task.files.length === 1 ? task.files[0].path
+        : task.files.map(task => task.path.substr(0, task.path.lastIndexOf('/')))
+          .reduce((last, cur) => last.length <= cur.length ? last : cur)
     }
   }
 }
