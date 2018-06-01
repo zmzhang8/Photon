@@ -5,13 +5,13 @@
         <i class="fas fa-plus"></i>
       </router-link>
       <div class="seperator-h"></div>
-      <a href="#" :class="{disabled: selectedList.length === 0}" @click="startTasks()">
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="changeTaskStatus({method: 'unpause'})">
         <i class="fas fa-play"></i>
       </a>
-      <a href="#" :class="{disabled: selectedList.length === 0}" @click="pauseTasks()">
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="changeTaskStatus({method: 'pause'})">
         <i class="fas fa-pause"></i>
         </a>
-      <a href="#" :class="{disabled: selectedList.length === 0}" @click="removeTasks()">
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="changeTaskStatus({method: 'remove'})">
         <i class="fas fa-times"></i>
       </a>
       <a href="#" @click="selectAll()">
@@ -34,8 +34,7 @@
         :connections="task.connections"
         @selectTask="selectTask($event)"
         @multiSelectTask="multiSelectTask($event)"
-        @startTask="startTask($event)"
-        @pauseTask="pauseTask($event)">
+        @changeTaskStatus="changeTaskStatus($event)">
       </task>
     </div>
   </div>
@@ -77,24 +76,11 @@
           })
         }
       },
-      startTasks: function () {
-        this.$emit('startTasks', this.selectedList)
-        this.selected = {}
-      },
-      pauseTasks: function () {
-        this.$emit('pauseTasks', this.selectedList)
-        this.selected = {}
-      },
-      removeTasks: function () {
-        this.$emit('removeTasks', this.selectedList)
-        this.selected = {}
-      },
-      startTask: function (gid) {
-        this.$emit('startTasks', [gid])
-        this.selected = {}
-      },
-      pauseTask: function (gid) {
-        this.$emit('pauseTasks', [gid])
+      changeTaskStatus: function (event) {
+        this.$emit('changeTaskStatus', {
+          method: event.method,
+          gids: event.gids || this.selectedList
+        })
         this.selected = {}
       }
     }

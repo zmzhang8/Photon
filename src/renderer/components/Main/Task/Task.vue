@@ -83,8 +83,8 @@
           clearTimeout(this.timer)
           this.clicks = 0
           if (!this.finished) {
-            if (this.status === 'paused') this.$emit('startTask', this.gid)
-            else this.$emit('pauseTask', this.gid)
+            if (this.status === 'paused') this.$emit('changeTaskStatus', {method: 'unpause', gids: this.gid})
+            else this.$emit('changeTaskStatus', {method: 'pause', gids: this.gid})
           }
         }
       }

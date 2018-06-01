@@ -41,10 +41,7 @@
         :rpc="server.rpc"
         :options="server.options"
         @addTask="addTask($event)"
-        @startOrPauseTask="startOrPauseTask($event)"
-        @startTasks="startTasks($event)"
-        @pauseTasks="pauseTasks($event)"
-        @removeTasks="removeTasks($event)"
+        @changeTaskStatus="changeTaskStatus($event)"
         @purgeTasks="purgeTasks($event)"
         @updateSettings="updateSettings()">
       </router-view>
@@ -95,27 +92,19 @@
       syncOptions: function () {
         this.server.syncOptions()
       },
-      addTask: function (info) {
+      addTask: function (event) {
         let server = this.server
-        if (info.file) {
-          if (info.type === 'torrent') server.addTorrent(info.file, info.seeding)
-          else if (info.type === 'metalink') server.addMetalink(info.file, info.seeding)
-        } else server.addUrls(info.urls, info.seeding)
+        if (event.file) {
+          if (event.type === 'torrent') server.addTorrent(event.file, event.seeding)
+          else if (event.type === 'metalink') server.addMetalink(event.file, event.seeding)
+        } else server.addUri(event.urls, event.seeding)
       },
-      startTasks: function (gids) {
-        if (gids.length === this.downloading.length) this.server.startTasksAll()
-        else if (gids.length !== 0) this.server.startTasks(gids)
-      },
-      pauseTasks: function (gids) {
-        if (gids.length === this.downloading.length) this.server.pauseTasksAll()
-        else if (gids.length !== 0) this.server.pauseTasks(gids)
-      },
-      removeTasks: function (gids) {
-        if (gids.length !== 0) this.server.removeTasks(gids)
+      changeTaskStatus: function (event) {
+        this.server.changeTaskStatus(event.method, event.gids)
       },
       purgeTasks: function (gids) {
         if (gids.length === this.finished.length) this.server.purgeTasksAll()
-        else if (gids.length !== 0) this.server.purgeTasks(gids)
+        else this.server.purgeTasks(gids)
       },
       updateSettings: function () {
         let server = this.server

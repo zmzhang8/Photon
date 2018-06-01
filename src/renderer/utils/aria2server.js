@@ -33,9 +33,9 @@ export default class Aria2Server {
     }
   }
 
-  addUrls (urls = [], seeding = false) {
+  addUri (uris = [], seeding = false) {
     let options = seeding ? defaultSeedingOptions : {}
-    this.handler.addUri(urls, options, result => {
+    this.handler.addUri(uris, options, result => {
       this.syncTasks()
     })
   }
@@ -54,34 +54,10 @@ export default class Aria2Server {
     })
   }
 
-  startTasks (gids = []) {
-    this.handler.unpause(gids, result => {
-      this.syncTasks()
-    })
-  }
-
-  startTasksAll () {
-    this.handler.unpauseAll(result => {
-      this.syncTasks()
-    })
-  }
-
-  pauseTasks (gids = []) {
-    this.handler.pause(gids, result => {
-      this.syncTasks()
-    })
-  }
-
-  pauseTasksAll () {
-    this.handler.pauseAll(result => {
-      this.syncTasks()
-    })
-  }
-
-  removeTasks (gids = []) {
-    this.handler.remove(gids, result => {
-      this.syncTasks()
-    })
+  changeTaskStatus (method, gids = []) {
+    if (method === 'unpause') this.handler.unpause(gids, result => this.syncTasks())
+    else if (method === 'pause') this.handler.pause(gids, result => this.syncTasks())
+    else if (method === 'remove') this.handler.remove(gids, result => this.syncTasks())
   }
 
   purgeTasks (gids = []) {
