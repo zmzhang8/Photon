@@ -4,7 +4,7 @@
   top: 0px;
   padding: 0px 8px;
   border-bottom: 2px solid lightgray;
-  color: #666;
+  color: #333;
   background-color: white;
   font-size: 24px;
   display: flex;
@@ -15,16 +15,13 @@
   flex: 0 0 48px;
   line-height: 48px;
   text-align: center;
+  color: #333;
 }
 
-.toolbar > a:link, .toolbar > a:visited {
-  color: #666;
-}
-
-.toolbar > a:hover {
-  text-decoration: none;
-  cursor: pointer;
-  color: #000;
+.toolbar > .disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
 }
 
 .seperator-h {

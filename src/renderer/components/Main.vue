@@ -2,17 +2,17 @@
   <div class="wrapper">
     <div class="sidebar">
       <div id="sidebar-servers" class="row" style="padding-bottom: 0;">
-        <div class="icon" @click="onClickHeiHeiHei">
+        <div class="icon" @click="getEasterEgg">
           <img src="@/assets/logo.png" class="logo">
         </div>
-        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{heiheihei||serverName}}</div>
+        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{easterEgg || serverName}}</div>
       </div>
       <div class="seperator-v"></div>
       <router-link to="/downloads" id="sidebar-downloads" class="row">
         <div class="icon">
           <i class="fas fa-arrow-down"></i>
         </div>
-        <div class="title">Downloads</div>
+        <div class="title">Downloading</div>
         <div class="status" v-if="activeNumber">
           <span class="bubble">{{activeNumber}}</span>
         </div>
@@ -41,6 +41,7 @@
         :rpc="server.rpc"
         :options="server.options"
         @addTask="addTask($event)"
+        @startOrPauseTask="startOrPauseTask($event)"
         @startTasks="startTasks($event)"
         @pauseTasks="pauseTasks($event)"
         @removeTasks="removeTasks($event)"
@@ -52,18 +53,12 @@
 </template>
 
 <script>
-
-  import _ from 'lodash'
-
-  // 彩蛋专用数据
-  // see: https://github.com/janlelis/unicode-confusable
-  const O_Confusable= ["ం", "ಂ", "ം", "ං", "०", "੦", "૦", "௦", "౦", "೦", "൦", "๐", "໐", "၀", "٥", "۵", "ｏ", "ℴ", "𝐨", "𝑜", "𝒐", "𝓸", "𝔬", "𝕠", "𝖔", "𝗈", "𝗼", "𝘰", "𝙤", "𝚘", "ᴏ", "ᴑ", "ꬽ", "ο", "𝛐", "𝜊", "𝝄", "𝝾", "𝞸", "σ", "𝛔", "𝜎", "𝝈", "𝞂", "𝞼", "ⲟ", "о", "ჿ", "օ", "ס", "ه", "𞸤", "𞹤", "𞺄", "ﻫ", "ﻬ", "ﻪ", "ﻩ", "ھ", "ﮬ", "ﮭ", "ﮫ", "ﮪ", "ہ", "ﮨ", "ﮩ", "ﮧ", "ﮦ", "ە", "ഠ", "ဝ", "𐓪", "𑣈", "𑣗", "𐐬"]
+  const oConfusable = ['ం', 'ಂ', 'ം', 'ං', '०', '੦', '૦', '௦', '౦', '೦', '൦', '๐', '໐', '၀', '٥', '۵', 'ｏ', 'ℴ', '𝐨', '𝑜', '𝒐', '𝓸', '𝔬', '𝕠', '𝖔', '𝗈', '𝗼', '𝘰', '𝙤', '𝚘', 'ᴏ', 'ᴑ', 'ꬽ', 'ο', '𝛐', '𝜊', '𝝄', '𝝾', '𝞸', 'σ', '𝛔', '𝜎', '𝝈', '𝞂', '𝞼', 'ⲟ', 'о', 'ჿ', 'օ', 'ס', 'ه', '𞸤', '𞹤', '𞺄', 'ﻫ', 'ﻬ', 'ﻪ', 'ﻩ', 'ھ', 'ﮬ', 'ﮭ', 'ﮫ', 'ﮪ', 'ہ', 'ﮨ', 'ﮩ', 'ﮧ', 'ﮦ', 'ە', 'ഠ', 'ဝ', '𐓪', '𑣈', '𑣗', '𐐬']
 
   export default {
-    data(){
+    data: function () {
       return {
-        // 彩蛋专用数据
-        heiheihei:'',
+        easterEgg: ''
       }
     },
     props: ['server', 'serverNameList', 'isDefault'],
@@ -94,9 +89,8 @@
       }
     },
     methods: {
-      // 彩蛋
-      onClickHeiHeiHei(){
-        this.heiheihei=this.serverName.replace(/o/g, _.sample(O_Confusable))
+      getEasterEgg: function () {
+        if (this.isDefault) this.easterEgg = this.serverName.replace(/o/g, oConfusable[Math.floor(Math.random() * oConfusable.length)])
       },
       syncOptions: function () {
         this.server.syncOptions()
@@ -139,14 +133,14 @@
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
   .sidebar {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 208px;
+    max-width: 208px;
     min-height: 100%;
     max-height: 100%;
     position: fixed;
     top: 0px;
     left: 0px;
-    background-color: #444444;
+    background-color: #444;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -158,7 +152,7 @@
 
   .sidebar > .row {
     padding: 12px 12px;
-    color: #dddddd;
+    color: #ddd;
     text-decoration: none;
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
@@ -179,7 +173,7 @@
   }
 
   .row > .status {
-    padding: 0 8px;
+    padding: 0 4px;
     font-size: 12px;
     flex: 0 0 32px;
     display: flex;
@@ -190,7 +184,8 @@
   .bubble {
     min-width: 16px;
     padding: 4px;
-    background-color: #0064C7;
+    background-color: #ddd;
+    color: #444;
     border-radius: 16px;
     text-align: center;
   }
@@ -206,7 +201,7 @@
   }
 
   .main {
-    margin-left: 200px;
+    margin-left: 208px;
     font-size: 20px;
   }
 </style>

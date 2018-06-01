@@ -1,30 +1,41 @@
 <template>
   <div id="downloads">
     <div class="toolbar">
-      <router-link to="/newTask"><i class="fas fa-plus"></i></router-link>
+      <router-link to="/newTask">
+        <i class="fas fa-plus"></i>
+      </router-link>
       <div class="seperator-h"></div>
-      <a @click="startTasks()"><i class="fas fa-play"></i></a>
-      <a @click="pauseTasks()"><i class="fas fa-pause"></i></a>
-      <a @click="removeTasks()"><i class="fas fa-times"></i></a>
-      <a @click="selectAll()"><i class="fas fa-list"></i></a>
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="startTasks()">
+        <i class="fas fa-play"></i>
+      </a>
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="pauseTasks()">
+        <i class="fas fa-pause"></i>
+        </a>
+      <a href="#" :class="{disabled: selectedList.length === 0}" @click="removeTasks()">
+        <i class="fas fa-times"></i>
+      </a>
+      <a href="#" @click="selectAll()">
+        <i class="fas fa-list"></i>
+      </a>
     </div>
+
     <div class="content">
       <task v-for="task in downloads"
         :key="task.gid + task.status"
-        :selected="selects[task.gid]"
+        :selected="selected[task.gid]"
         :gid="task.gid"
         :status="task.status"
         :alias="task.name"
-        :totalSize="task.totalSize"
-        :completedPercentage="task.completedPercentage"
-        :remainingTime="task.remainingTime"
-        :uploadedSize="task.uploadedSize"
+        :totalLength="task.totalLength"
+        :completedLength="task.completedLength"
+        :uploadLength="task.uploadLength"
         :downloadSpeed="task.downloadSpeed"
         :uploadSpeed="task.uploadSpeed"
-        :dir="task.dir"
-        :path="task.path"
+        :connections="task.connections"
         @selectTask="selectTask($event)"
-        @multiSelectTask="multiSelectTask($event)">
+        @multiSelectTask="multiSelectTask($event)"
+        @startTask="startTask($event)"
+        @pauseTask="pauseTask($event)">
       </task>
     </div>
   </div>
@@ -38,45 +49,53 @@
     props: ['downloads'],
     data: function () {
       return {
-        selects: {}
+        selected: {}
       }
     },
     computed: {
-      checkedList: function () {
-        return Object.keys(this.selects).filter(key => this.selects[key])
+      selectedList: function () {
+        return Object.keys(this.selected).filter(key => this.selected[key])
       }
     },
     methods: {
       selectTask: function (gid) {
-        this.selects = {}
-        this.$set(this.selects, gid, true)
+        this.selected = {}
+        this.$set(this.selected, gid, true)
       },
       multiSelectTask: function (gid) {
-        let selects = this.selects
-        if (selects[gid]) {
-          this.$set(selects, gid, false)
-        } else this.$set(selects, gid, true)
+        let selected = this.selected
+        if (selected[gid]) {
+          this.$set(selected, gid, false)
+        } else this.$set(selected, gid, true)
       },
       selectAll: function () {
-        if (this.checkedList.length === this.downloads.length) {
-          this.selects = {}
+        if (this.selectedList.length === this.downloads.length) {
+          this.selected = {}
         } else {
           this.downloads.forEach(task => {
-            this.$set(this.selects, task.gid, true)
+            this.$set(this.selected, task.gid, true)
           })
         }
       },
       startTasks: function () {
-        this.$emit('startTasks', this.checkedList)
-        this.selects = {}
+        this.$emit('startTasks', this.selectedList)
+        this.selected = {}
       },
       pauseTasks: function () {
-        this.$emit('pauseTasks', this.checkedList)
-        this.selects = {}
+        this.$emit('pauseTasks', this.selectedList)
+        this.selected = {}
       },
       removeTasks: function () {
-        this.$emit('removeTasks', this.checkedList)
-        this.selects = {}
+        this.$emit('removeTasks', this.selectedList)
+        this.selected = {}
+      },
+      startTask: function (gid) {
+        this.$emit('startTasks', [gid])
+        this.selected = {}
+      },
+      pauseTask: function (gid) {
+        this.$emit('pauseTasks', [gid])
+        this.selected = {}
       }
     }
   }

@@ -1,10 +1,28 @@
 import Aria2RPC from './aria2rpc'
 
+const defaultRPC = {
+  address: '127.0.0.1',
+  port: '6800',
+  token: '',
+  httpsEnabled: false
+}
+
+const defaultOptions = {
+  'max-concurrent-downloads': 5,
+  'max-overall-download-limit': 0,
+  'max-overall-upload-limit': 262144
+}
+
+const defaultSeedingOptions = {
+  'seed-time': '43200',
+  'seed-ratio': '10'
+}
+
 export default class Aria2Server {
-  constructor (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions()) {
+  constructor (name = 'Default', rpc = defaultRPC, options = defaultOptions) {
     this.name = name
-    this.rpc = JSON.parse(JSON.stringify(rpc))
-    this.options = JSON.parse(JSON.stringify(options))
+    this.rpc = Object.assign({}, rpc)
+    this.options = Object.assign({}, options)
     this.handler = new Aria2RPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
     this.connection = false
     this.tasks = {
@@ -16,21 +34,21 @@ export default class Aria2Server {
   }
 
   addUrls (urls = [], seeding = false) {
-    let options = seeding ? this._defaultSeedingOptions() : {}
+    let options = seeding ? defaultSeedingOptions : {}
     this.handler.addUri(urls, options, result => {
       this.syncTasks()
     })
   }
 
   addTorrent (torrent, seeding = false) {
-    let options = seeding ? this._defaultSeedingOptions() : {}
+    let options = seeding ? defaultSeedingOptions : {}
     this.handler.addTorrent(torrent, options, result => {
       this.syncTasks()
     })
   }
 
   addMetalink (metalink, seeding = false) {
-    let options = seeding ? this._defaultSeedingOptions() : {}
+    let options = seeding ? defaultSeedingOptions : {}
     this.handler.addTorrent(metalink, options, result => {
       this.syncTasks()
     })
@@ -117,11 +135,11 @@ export default class Aria2Server {
     return this.tasks.active.length !== 0
   }
 
-  setServer (name = 'Default', rpc = this._defaultRPC(), options = this._defaultOptions(), ignoreDir = true) {
+  setServer (name = 'Default', rpc = defaultRPC, options = defaultOptions, ignoreDir = true) {
     this.name = name.slice()
-    this.rpc = JSON.parse(JSON.stringify(rpc))
+    this.rpc = Object.assign({}, rpc)
     let dir = this.options['dir']
-    this.options = JSON.parse(JSON.stringify(options))
+    this.options = Object.assign({}, options)
     if (ignoreDir) this.options['dir'] = dir
     this.handler.setRPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
     this.handler.changeGlobalOption(options)
@@ -129,44 +147,16 @@ export default class Aria2Server {
 
   _formatTask (task) {
     return {
-      gid: task['gid'],
-      status: task['status'],
+      gid: task.gid,
+      status: task.status,
       name: task.hasOwnProperty('bittorrent') && task['bittorrent'].hasOwnProperty('info') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
-      totalSize: task.totalLength,
-      completedSize: task.completedLength,
-      completedPercentage: Math.round(task['completedLength'] / task['totalLength'] * 100) || 0,
-      remainingTime: (task['totalLength'] - task['completedLength']) / task['downloadSpeed'],
-      uploadedSize: task.uploadLength,
+      totalLength: task.totalLength,
+      completedLength: task.completedLength,
+      uploadLength: task.uploadLength,
       downloadSpeed: task.downloadSpeed,
       uploadSpeed: task.uploadSpeed,
-      connections: parseInt(task['connections']),
-      dir: task['dir'],
-      // TODO: 
-      path: task.files[0].path,
-    }
-  }
-
-  _defaultRPC () {
-    return {
-      address: '127.0.0.1',
-      port: '6800',
-      token: '',
-      httpsEnabled: false
-    }
-  }
-
-  _defaultOptions () {
-    return {
-      'max-concurrent-downloads': 5,
-      'max-overall-download-limit': 0,
-      'max-overall-upload-limit': 262144
-    }
-  }
-
-  _defaultSeedingOptions () {
-    return {
-      'seed-time': '43200',
-      'seed-ratio': '10'
+      connections: task.connections,
+      dir: task.dir
     }
   }
 }

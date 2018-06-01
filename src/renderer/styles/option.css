@@ -83,6 +83,7 @@ input:disabled {
   border: 1px solid #ddd;
   color: #444;
   opacity: 0.65;
+  pointer-events: none;
 }
 
 .button {

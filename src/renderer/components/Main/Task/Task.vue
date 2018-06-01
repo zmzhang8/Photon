@@ -1,52 +1,43 @@
 <template>
-  <div class="row" :class="{selected: selected}" @click.stop="$emit('selectTask', gid)" @click.right.stop="$emit('multiSelectTask', gid)">
+  <div class="row" :class="{selected: selected}" @click.left.stop="onClick()" @click.right.stop="$emit('multiSelectTask', gid)">
     <div class="col-status">
-      <i :class="icon[status]"></i>
+      <i :class="icon[preciseStatus]"></i>
     </div>
     <div class="col-info">
       <div class="title" :title="alias">{{alias}}</div>
-      <div class="small" v-if="totalSize !== '0'">{{bytesToString(totalSize, 2)}}</div>
-      <div>
-        <span class="link" @click="onClickOpenFile" v-if="completed">打开文件</span>
-        <span class="link" @click="onClickOpenFolder">打开所在文件夹</span>
-      </div>
+      <div class="detail" v-if="totalLength !== '0'">{{bytesToString(totalLength, 2)}}</div>
     </div>
     <div class="col-progress">
       <div class="progress-bar">
-        <div class="progress" :style="{width: completedPercentage + '%'}"></div>
+        <div class="progress" :style="{width: completedPercentage}"></div>
       </div>
-      <div class="small">
+      <div class="detail">
         <div>{{secondsToString(remainingTime)}}</div>
-        <div>{{completedPercentage + '%'}}</div>
+        <div>{{completedPercentage}}</div>
       </div>
     </div>
     <div class="col-speed"  v-if="!completed">
-      <div v-if="downloadSpeed !== '0'">{{bytesToString(downloadSpeed,1) + 'B/s'}}</div>
-      <div v-if="completedPercentage === 100 && uploadSpeed !== '0'">
-        <div><i class="far fa-arrow-alt-circle-up"></i> {{bytesToString(uploadSpeed,1) + 'B/s'}}</div>
-        <div class="small" v-if="uploadedSize !== '0'">{{bytesToString(uploadedSize, 2)}}</div>
-      </div>
+      <div v-if="downloadSpeed !== '0'">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
     </div>
   </div>
 </template>
 
 
 <script>
-  import {bytesToString, secondsToString} from '../../../service/converter.js'
-  const {shell} = require('electron')
+  import Converter from '@/service/converter.js'
+
   export default {
     props: [
       'selected',
       'gid',
       'status',
       'alias',
-      'totalSize',
-      'completedPercentage',
-      'remainingTime',
-      'uploadedSize',
+      'totalLength',
+      'completedLength',
+      'uploadLength',
       'downloadSpeed',
       'uploadSpeed',
-      'path',
+      'connections'
     ],
     data: function () {
       return {
@@ -56,37 +47,56 @@
           paused: ['fas', 'fa-pause'],
           complete: ['fas', 'fa-check'],
           removed: ['fas', 'fa-times'],
-          error: ['fas', 'fa-exclamation']
-        }
+          error: ['fas', 'fa-exclamation'],
+          uploading: ['fas', 'fa-arrow-up']
+        },
+        clicks: 0,
+        timer: undefined
       }
     },
     computed: {
+      preciseStatus: function () {
+        return this.status === 'active' && this.totalLength === this.completedLength ? 'uploading' : this.status
+      },
       completed: function () {
         return this.status === 'complete' || this.status === 'removed' || this.status === 'error'
+      },
+      completedPercentage: function () {
+        return (this.totalLength ? Math.round(this.completedLength / this.totalLength * 100) : 0) + '%'
+      },
+      remainingTime: function () {
+        return (this.totalLength - this.completedLength) / this.downloadSpeed
       }
     },
-    methods:{
-      secondsToString,
-      bytesToString,
-
-      onClickOpenFile(){
-        shell.openItem(this.path)
-      },
-      onClickOpenFolder(){
-        shell.showItemInFolder(this.path)
-      },
+    methods: {
+      secondsToString: Converter.secondsToString,
+      bytesToString: Converter.bytesToString,
+      onClick: function () {
+        if (++this.clicks === 1) {
+          this.timer = setTimeout(() => {
+            this.clicks = 0
+            this.$emit('selectTask', this.gid)
+          }, 200)
+        } else {
+          clearTimeout(this.timer)
+          this.clicks = 0
+          if (!this.completed) {
+            if (this.status === 'paused') this.$emit('startTask', this.gid)
+            else this.$emit('pauseTask', this.gid)
+          }
+        }
+      }
     }
   }
 </script>
 
 <style lang="css" scoped>
-  @import "~@fortawesome/fontawesome-free-webfonts/css/fa-regular.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fa-solid.css";
   @import "~@fortawesome/fontawesome-free-webfonts/css/fontawesome.css";
 
   .row {
     height: 60px;
-    padding: 4px 8px;
+    padding: 0 8px;
     border-bottom: 1px solid #ccc;
     display: flex;
     align-items: center;
@@ -123,7 +133,7 @@
   }
 
   .row > .col-speed {
-    flex: 0 0 108px;
+    flex: 0 0 100px;
     padding: 0 8px;
     text-align: right;
   }
@@ -134,7 +144,7 @@
     text-overflow: ellipsis;
   }
 
-  .small {
+  .detail {
     margin-top: 4px;
     color: #666;
     font-size: 12px;
@@ -161,14 +171,4 @@
     background-color: #D6ECFF;
   }
 
-  .link{
-    color: #0098FF;
-    font-size: 12px;
-  }
-  .link:hover{
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
 </style>
-

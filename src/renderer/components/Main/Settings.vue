@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  import {bytesToString, bytesToUnit} from '@/service/converter'
+  import Converter from '@/service/converter'
 
   export default {
     props: ['settings'],
@@ -123,8 +123,8 @@
         types.forEach(type => {
           let limit = this.settings.options['max-overall-' + type + '-limit']
           limits[type] = {
-            number: parseInt(bytesToString(limit)),
-            unit: bytesToUnit(limit)
+            number: parseInt(Converter.bytesToString(limit)),
+            unit: Converter.bytesToUnit(limit)
           }
         })
         return limits
@@ -139,12 +139,12 @@
       },
       setLimitNumber: function (event, type) {
         let number = parseInt(event.target.value) || 0
-        let bytes = stringToBytes(number + this.limits[type].unit)
+        let bytes = Converter.stringToBytes(number + this.limits[type].unit)
         this.settings.options['max-overall-' + type + '-limit'] = bytes
       },
       setLimitUnit: function (event, type) {
         let unit = event.target.value
-        let bytes = stringToBytes(this.limits[type].number + unit)
+        let bytes = Converter.stringToBytes(this.limits[type].number + unit)
         this.settings.options['max-overall-' + type + '-limit'] = bytes
       }
     }
