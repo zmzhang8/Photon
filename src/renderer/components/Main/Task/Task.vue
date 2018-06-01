@@ -16,7 +16,7 @@
         <div>{{completedPercentage}}</div>
       </div>
     </div>
-    <div class="col-speed"  v-if="!completed">
+    <div class="col-speed"  v-if="!finished">
       <div v-if="downloadSpeed !== '0'">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
     </div>
   </div>
@@ -58,7 +58,7 @@
       preciseStatus: function () {
         return this.status === 'active' && this.totalLength === this.completedLength ? 'uploading' : this.status
       },
-      completed: function () {
+      finished: function () {
         return this.status === 'complete' || this.status === 'removed' || this.status === 'error'
       },
       completedPercentage: function () {
@@ -76,11 +76,11 @@
           this.timer = setTimeout(() => {
             this.clicks = 0
             this.$emit('selectTask', this.gid)
-          }, 200)
+          }, 250)
         } else {
           clearTimeout(this.timer)
           this.clicks = 0
-          if (!this.completed) {
+          if (!this.finished) {
             if (this.status === 'paused') this.$emit('startTask', this.gid)
             else this.$emit('pauseTask', this.gid)
           }

@@ -26,6 +26,9 @@ new Vue({
 // Desktop App
 const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
+const webFrame = require('electron').webFrame
+
+webFrame.setZoomLevelLimits(1, 1)
 
 let blocker
 setInterval(() => {
