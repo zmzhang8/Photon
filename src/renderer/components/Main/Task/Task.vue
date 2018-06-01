@@ -15,8 +15,8 @@
         <div class="progress" :class="{'progress-success': completed}" :style="{width: completedPercentage}"></div>
       </div>
       <div class="detail">
-        <div v-if="status ==='active' && !completed">{{secondsToString(remainingTime)}}</div>
-        <div v-if="status ==='active' && !completed">{{completedPercentage}}</div>
+        <div v-if="status ==='active'">{{secondsToString(remainingTime)}}</div>
+        <div v-if="status ==='active'">{{completedPercentage}}</div>
       </div>
     </div>
     <div class="col-speed"  v-if="!finished">
@@ -175,7 +175,7 @@
   }
 
   .progress-bar .progress-success {
-    background-color: #00B246;
+    background-color: #00DD00;
   }
 
   .selected {

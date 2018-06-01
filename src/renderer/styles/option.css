@@ -11,7 +11,7 @@
 }
 
 .row {
-  padding: 8px 8px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,7 +104,7 @@ input:disabled {
 
 .button-large {
   min-width: 64px;
-  padding: 8px 16px;
+  padding: 8px 8px;
   font-size: 20px;
 }
 
@@ -118,6 +118,12 @@ input:disabled {
 
 .hidden {
   display: none;
+}
+
+.disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
 }
 
 .inactive {

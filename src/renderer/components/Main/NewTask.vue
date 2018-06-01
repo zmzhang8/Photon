@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="row vspace">
-      <div class="button button-large" @click="start()">Start</div>
+      <div class="button button-large" :class="{'disabled': !urls && !file}" @click="start()">Start</div>
       <div class="button button-large hspace" @click="cancel()">Cancel</div>
     </div>
   </div>

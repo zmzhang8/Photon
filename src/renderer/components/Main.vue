@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="sidebar">
       <div id="sidebar-servers" class="row" style="padding-bottom: 0;">
-        <div class="icon" @click="getEasterEgg">
+        <div class="icon" style="padding: 0;" @click="getEasterEgg">
           <img src="@/assets/logo.png" class="logo">
         </div>
         <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{easterEgg || serverName}}</div>
@@ -151,7 +151,7 @@
   }
 
   .row > .icon {
-    padding: 0 4px;
+    padding: 0 8px;
     flex: 0 0 20px;
     font-size: 20px;
   }
@@ -159,6 +159,9 @@
   .row > .title {
     padding: 0 8px;
     flex: 1 1 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .row > .status {
