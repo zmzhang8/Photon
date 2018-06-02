@@ -22,6 +22,7 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 ## 插件
 
 因为 *Photon* 的下载核心是 aria2，所有基于 RPC 协议的 aria2 插件都同样适用于 *Photon*。
+
 *Photon* 和 aria2 默认的 RPC 配置：
 - URL: http://127.0.0.1:6800/jsonrpc
 - 地址: 127.0.0.1

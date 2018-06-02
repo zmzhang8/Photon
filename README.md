@@ -1,3 +1,5 @@
+Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://github.com/alanzhangzm/Photon/blob/master/README.zh-cn.md)
+
 # Photon
 
 *Photon* is a lightweight multi-threaded downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink** download.
@@ -20,6 +22,7 @@ Latest releases: https://github.com/alanzhangzm/Photon/releases
 ## Extensions
 
 Since *Photon* uses aria2 as download core, all of the extensions that support aria2 via RPC are also *Photon* compatible.
+
 The default RPC configuration for *Photon* and aria2:
 - URL: http://127.0.0.1:6800/jsonrpc
 - Address: 127.0.0.1
