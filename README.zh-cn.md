@@ -1,10 +1,10 @@
-Languages: [English](https://github.com/alanzhangzm/Photon)
+Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://github.com/alanzhangzm/Photon/blob/master/README.zh-cn.md)
 
 # Photon
 
 *Photon* 是一款基于 [aria2](https://github.com/aria2/aria2) 的多线程下载软件，支持 **HTTP/HTTPS**，**磁力链**，**BT** 和 **Metalink**。
 
-*Photon* 现发行于 **macOS** 和 **Windows** 平台，即将发布 Linux 版。
+*Photon* 现发行于 **macOS** 和 **Windows** 平台，即将发布 Linux 版。
 
 
 ## 截图
@@ -21,7 +21,7 @@ Languages: [English](https://github.com/alanzhangzm/Photon)
 
 ## 插件
 
-因为 *Photon* 的下载核心是 aria2，所有基于 RPC 协议的 aria2 插件都同样适用于 *Photon*。
+因为 *Photon* 的下载核心是 aria2，所有基于 RPC 协议的 aria2 插件都同样适用于 *Photon*。
 *Photon* 和 aria2 默认的 RPC 配置：
 - URL: http://127.0.0.1:6800/jsonrpc
 - 地址: 127.0.0.1
