@@ -11,7 +11,7 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 
 **Mac**
 
-![mac](screenshot/mac.png)
+![mac](screenshot/mac.zh-CN.png)
 
 
 ## 安装
