@@ -1,0 +1,34 @@
+{
+  "main": {
+    "downloading": "下载",
+    "finished": "已完成",
+    "settings": "设置"
+  },
+  "newTask": {
+    "task": "任务",
+    "urls": "链接",
+    "btMetalink": "BT / Metalink",
+    "seeding": "做种",
+    "choose": "选择文件",
+    "start": "开始",
+    "cancel": "取消"
+  },
+  "settings": {
+    "config": "配置",
+    "name": "命名",
+    "rpc": "RPC",
+    "address": "地址",
+    "port": "端口",
+    "token": "密码",
+    "https": "HTTPS",
+    "status": "状态",
+    "connected": "已连接",
+    "disconnected": "未连接",
+    "download": "下载",
+    "directory": "文件夹",
+    "choose": "选择",
+    "maxActive": "最大同时下载",
+    "downloadLimit": "下载限速",
+    "uploadLimit": "上传限速"
+  }
+}
