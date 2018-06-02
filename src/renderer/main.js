@@ -22,7 +22,7 @@ const i18n = new VueI18n({
 
 let aria2manager = new Aria2Manager()
 aria2manager.syncTasksAll()
-aria2manager.setSyncInterval(2000)
+aria2manager.setSyncInterval(1000)
 
 new Vue({
   components: {
@@ -36,7 +36,7 @@ new Vue({
   }
 }).$mount('#app')
 
-// Desktop App
+// Electron
 const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
 const webFrame = require('electron').webFrame
