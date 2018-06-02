@@ -37,15 +37,33 @@ new Vue({
 }).$mount('#app')
 
 // Electron
+const os = require('os')
 const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
+const window = require('electron').remote.getCurrentWindow()
 const webFrame = require('electron').webFrame
+let aria2server = aria2manager.servers[0]
 
+// disable zooming
 webFrame.setZoomLevelLimits(1, 1)
 
+// set app badge (works for macOS and Unity)
+if (os.platform() === 'win32') {
+  setInterval(() => {
+    let number = aria2server.activeNumber()
+    if (number !== 0) window.setOverlayIcon('@/assets/badge.png', number)
+    else window.setOverlayIcon(null)
+  }, 1000)
+} else {
+  setInterval(() => {
+    app.setBadgeCount(aria2server.activeNumber())
+  }, 1000)
+}
+
+// prevent suspension when downloading
 let blocker
 setInterval(() => {
-  if (aria2manager.servers[0].isDownloading()) {
+  if (aria2server.isDownloading()) {
     if (blocker === undefined || !powerSaveBlocker.isStarted(blocker)) blocker = powerSaveBlocker.start('prevent-app-suspension')
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)
@@ -53,5 +71,5 @@ setInterval(() => {
 }, 60000)
 
 app.on('will-quit', () => {
-  AppData.writeData(aria2manager.servers[0].options)
+  AppData.writeData(aria2server.options)
 })

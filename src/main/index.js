@@ -99,10 +99,10 @@ const menuTemplate = [{
 ]
 
 app.on('ready', () => {
+  aria2process = startAria2()
   createWindow()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   mainWindow.setMenu(null)
-  aria2process = startAria2()
 })
 
 app.on('window-all-closed', () => {

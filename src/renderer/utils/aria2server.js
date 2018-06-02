@@ -66,12 +66,6 @@ export default class Aria2Server {
     })
   }
 
-  purgeTasksAll () {
-    this.handler.purgeDownloadResult(result => {
-      this.syncTasks()
-    })
-  }
-
   syncTasks () {
     let handler = this.handler
     let tasks = this.tasks
@@ -109,6 +103,10 @@ export default class Aria2Server {
 
   isDownloading () {
     return this.tasks.active.some(task => task.completedLength !== task.totalLength)
+  }
+
+  activeNumber () {
+    return this.tasks.active.length + this.tasks.waiting.length
   }
 
   setServer (name = 'Default', rpc = defaultRPC, options = defaultOptions, ignoreDir = true) {

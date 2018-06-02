@@ -103,8 +103,7 @@
         this.server.changeTaskStatus(event.method, event.gids)
       },
       purgeTasks: function (gids) {
-        if (gids.length === this.finished.length) this.server.purgeTasksAll()
-        else this.server.purgeTasks(gids)
+        this.server.purgeTasks(gids)
       },
       updateSettings: function () {
         let server = this.server
