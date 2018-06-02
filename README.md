@@ -2,7 +2,7 @@
 
 *Photon* is a lightweight multi-threaded downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink** download.
 
-*Photon* is cross platform. It has **macOS** and **windows** releases now and will have Linux release soon.
+*Photon* is cross platform. It has **macOS** and **Windows** releases now and will have Linux release soon.
 
 
 ## Screenshots
@@ -26,9 +26,10 @@ The default RPC configuration for *Photon* and aria2:
 - Port: 6800
 - Protocol: HTTP
 
-Some popular aria2 extensions:
+Some popular extensions:
 - [BaiduExporter](https://github.com/acgotaku/BaiduExporter)
 - [ThunderLixianExporter](https://github.com/binux/ThunderLixianExporter)
+- [115](https://github.com/acgotaku/115)
 
 
 ## Development
