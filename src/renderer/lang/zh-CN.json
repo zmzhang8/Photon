@@ -15,7 +15,7 @@
   },
   "settings": {
     "config": "配置",
-    "name": "命名",
+    "name": "名称",
     "rpc": "RPC",
     "address": "地址",
     "port": "端口",
