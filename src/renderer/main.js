@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueI18n from 'vue-i18n'
 
 import Aria2Manager from '@/utils/aria2manager'
 
@@ -7,6 +8,17 @@ import router from './router'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
+
+Vue.use(VueI18n)
+const messages = {
+  'en-US': { message: require('@/lang/en-US.json') },
+  'zh-CN': { message: require('@/lang/zh-CN.json') }
+}
+const i18n = new VueI18n({
+  locale: navigator.language,
+  fallbackLocale: 'en-US',
+  messages
+})
 
 let aria2manager = new Aria2Manager()
 aria2manager.syncTasksAll()
@@ -17,6 +29,7 @@ new Vue({
     App
   },
   router,
+  i18n,
   template: '<App :manager="manager"></App>',
   data: {
     manager: aria2manager

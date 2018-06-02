@@ -3,10 +3,10 @@
     <div class="content">
       <form @change="$emit('updateSettings')">
         <div id="settings-config" class="group" v-if="!settings.isDefault">
-          <div class="header">Config</div>
+          <div class="header">{{ $t("message.settings.config") }}</div>
           <div class="row">
             <div class="left">
-              <label for="settings-config-name">Name</label>
+              <label for="settings-config-name">{{ $t("message.settings.name") }}</label>
             </div>
             <div class="right">
               <input id="settings-config-name" type="text" required v-model="settings.name"></input>
@@ -14,10 +14,10 @@
           </div>
         </div>
         <div id="settings-rpc" class="group" v-if="!settings.isDefault">
-          <div class="header">RPC</div>
+          <div class="header">{{ $t("message.settings.rpc") }}</div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-address">Address</label>
+              <label for="settings-rpc-address">{{ $t("message.settings.address") }}</label>
             </div>
             <div class="right">
               <input id="settings-rpc-address" type="text" required v-model="settings.rpc.address"></input>
@@ -25,7 +25,7 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-port">Port</label>
+              <label for="settings-rpc-port">{{ $t("message.settings.port") }}</label>
             </div>
             <div class="right">
               <input id="settings-rpc-port" type="number" min="0" max="65535" step="1" required v-model.number="settings.rpc.port"></input>
@@ -33,7 +33,7 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-token">Token</label>
+              <label for="settings-rpc-token">{{ $t("message.settings.token") }}</label>
             </div>
             <div class="right">
               <input id="settings-rpc-token" type="password" v-model="settings.rpc.token"></input>
@@ -41,7 +41,7 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-protocol">HTTPS</label>
+              <label for="settings-rpc-protocol">{{ $t("message.settings.https") }}</label>
             </div>
             <div class="right">
               <input type="checkbox" v-model="settings.rpc.httpsEnabled">
@@ -49,29 +49,29 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-rpc-status">Status</label>
+              <label for="settings-rpc-status">{{ $t("message.settings.status") }}</label>
             </div>
             <div class="right">
-              <span class="badge badge-success" v-if="settings.connection">Connected</span>
-              <span class="badge badge-danger" v-if="!settings.connection">Not Connected</span>
+              <span class="badge badge-success" v-if="settings.connection">{{ $t("message.settings.connected") }}</span>
+              <span class="badge badge-danger" v-if="!settings.connection">{{ $t("message.settings.disconnected") }}</span>
             </div>
           </div>
         </div>
         <div id="settings-download" class="group">
-          <div class="header">Download</div>
+          <div class="header">{{ $t("message.settings.download") }}</div>
           <div class="row" v-if="settings.isDefault">
             <div class="left">
-              <label for="settings-download-path">Directory</label>
+              <label for="settings-download-path">{{ $t("message.settings.directory") }}</label>
             </div>
             <div class="right pair">
-              <label for="settings-download-path-choose" class="button fixed">Choose</label>
+              <label for="settings-download-path-choose" class="button fixed">{{ $t("message.settings.choose") }}</label>
               <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
               <input class="expanded" type="text" disabled v-model="settings.options['dir']"></input>
             </div>
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-download-max-active">Max Active</label>
+              <label for="settings-download-max-active">{{ $t("message.settings.maxActive") }}</label>
             </div>
             <div class="right">
               <input id="settings-download-max-active" type="number" min="1" max="100" step="1" required v-model.number="settings.options['max-concurrent-downloads']"></input>
@@ -79,7 +79,7 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-download-download-limit">Download Limit</label>
+              <label for="settings-download-download-limit">{{ $t("message.settings.downloadLimit") }}</label>
             </div>
             <div class="right pair">
               <input id="settings-download-download-limit-number" class="fixed" type="number" min="0" max="1000" step="1" required v-model="limits.download.number" @change="setLimitNumber($event, 'download')">
@@ -93,7 +93,7 @@
           </div>
           <div class="row">
             <div class="left">
-              <label for="settings-download-upload-limit">Upload Limit</label>
+              <label for="settings-download-upload-limit">{{ $t("message.settings.uploadLimit") }}</label>
             </div>
             <div class="right pair">
               <input id="settings-download-upload-limit-number" class="fixed" type="number" min="0" max="1000" step="1" required v-model="limits.upload.number" @change="setLimitNumber($event, 'upload')">

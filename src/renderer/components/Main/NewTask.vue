@@ -1,10 +1,10 @@
 <template>
   <div id="new-task">
     <div class="group">
-      <div class="header">Task</div>
+      <div class="header">{{ $t("message.newTask.task") }}</div>
       <div class="row" v-if="!file">
         <div class="left">
-          <label for="new-task-urls">URLs</label>
+          <label for="new-task-urls">{{ $t("message.newTask.urls") }}</label>
         </div>
         <div class="right">
           <textarea id="new-task-urls" v-model="urls"></textarea>
@@ -12,17 +12,17 @@
       </div>
       <div class="row">
         <div class="left">
-          <label for="new-task-bt">BT / Metalink</label>
+          <label for="new-task-bt">{{ $t("message.newTask.btMetalink") }}</label>
         </div>
         <div class="right pair">
-          <label for="new-task-bt-choose" class="button fixed">Choose</label>
+          <label for="new-task-bt-choose" class="button fixed">{{ $t("message.newTask.choose") }}</label>
           <input id="new-task-bt-choose" class="hidden" type="file" accept=".torrent, .metalink" @change="readFile($event)">
           <input class="expanded" type="text" disabled v-model="filePath"></input>
         </div>
       </div>
       <div class="row">
         <div class="left">
-          <label for="new-task-seeding">Seeding</label>
+          <label for="new-task-seeding">{{ $t("message.newTask.seeding") }}</label>
         </div>
         <div class="right">
           <input id="new-task-seeding" type="checkbox" v-model="seeding">
@@ -30,8 +30,8 @@
       </div>
     </div>
     <div class="row vspace">
-      <div class="button button-large" :class="{'disabled': !urls && !file}" @click="start()">Start</div>
-      <div class="button button-large hspace" @click="cancel()">Cancel</div>
+      <div class="button button-large" :class="{'disabled': !urls && !file}" @click="start()">{{ $t("message.newTask.start") }}</div>
+      <div class="button button-large hspace" @click="cancel()">{{ $t("message.newTask.cancel") }}</div>
     </div>
   </div>
 </template>

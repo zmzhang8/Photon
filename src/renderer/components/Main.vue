@@ -5,29 +5,29 @@
         <div class="icon" style="padding: 0;" @click="getEasterEgg">
           <img src="@/assets/logo.png" class="logo">
         </div>
-        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{easterEgg || serverName}}</div>
+        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{ easterEgg || serverName }}</div>
       </div>
       <div class="seperator-v"></div>
       <router-link to="/downloading" id="sidebar-downloading" class="row">
         <div class="icon">
           <i class="fas fa-arrow-down"></i>
         </div>
-        <div class="title">Active</div>
+        <div class="title">{{ $t("message.main.downloading") }}</div>
         <div class="status" v-if="activeNumber">
-          <span class="bubble">{{activeNumber}}</span>
+          <span class="bubble">{{ activeNumber }}</span>
         </div>
       </router-link>
       <router-link to="/finished" id="sidebar-finished" class="row">
         <div class="icon">
           <i class="fas fa-check"></i>
         </div>
-        <div class="title">Finished</div>
+        <div class="title">{{ $t("message.main.finished") }}</div>
       </router-link>
       <router-link to="/settings" id="sidebar-settings" class="row" @click.native="syncOptions()">
         <div class="icon">
           <i class="fas fa-cog"></i>
         </div>
-        <div class="title">Settings</div>
+        <div class="title">{{ $t("message.main.settings") }}</div>
       </router-link>
     </div>
 

@@ -1,0 +1,34 @@
+{
+  "main": {
+    "downloading": "Active",
+    "finished": "Finished",
+    "settings": "Settings"
+  },
+  "newTask": {
+    "task": "Task",
+    "urls": "URLs",
+    "btMetalink": "BT / Metalink",
+    "seeding": "Seeding",
+    "choose": "Choose",
+    "start": "Start",
+    "cancel": "Cancel"
+  },
+  "settings": {
+    "config": "Config",
+    "name": "Name",
+    "rpc": "RPC",
+    "address": "Address",
+    "port": "Port",
+    "token": "Token",
+    "https": "HTTPS",
+    "status": "Status",
+    "connected": "Connected",
+    "disconnected": "Not Connected",
+    "download": "Download",
+    "directory": "Directory",
+    "choose": "Choose",
+    "maxActive": "Max Active",
+    "downloadLimit": "Download Limit",
+    "uploadLimit": "Upload Limit"
+  }
+}
