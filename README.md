@@ -1,4 +1,4 @@
-Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://github.com/alanzhangzm/Photon/blob/master/README.zh-cn.md)
+Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://github.com/alanzhangzm/Photon/blob/master/README.zh-CN.md)
 
 # Photon
 
