@@ -104,7 +104,6 @@
     display: flex;
     align-items: center;
     font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
     user-select: none;
   }
 

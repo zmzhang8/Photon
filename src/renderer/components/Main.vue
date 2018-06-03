@@ -143,7 +143,6 @@
     color: #ddd;
     text-decoration: none;
     font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
     display: flex;
     align-items: center;
     user-select: none;

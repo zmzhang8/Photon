@@ -49,9 +49,10 @@ webFrame.setZoomLevelLimits(1, 1)
 
 // set app badge (works for macOS and Unity)
 if (os.platform() === 'win32') {
+  let badge = require('electron').remote.nativeImage.createFromPath('@/assets/badge.png')
   setInterval(() => {
     let number = aria2server.activeNumber()
-    if (number !== 0) window.setOverlayIcon('@/assets/badge.png', number)
+    if (number !== 0) window.setOverlayIcon(badge, number)
     else window.setOverlayIcon(null)
   }, 1000)
 } else {
@@ -68,7 +69,7 @@ setInterval(() => {
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)
   }
-}, 60000)
+}, 30000)
 
 app.on('will-quit', () => {
   AppData.writeData(aria2server.options)

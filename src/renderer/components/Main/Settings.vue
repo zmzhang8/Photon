@@ -160,7 +160,6 @@
     padding: 4px;
     border-radius: 4px;
     font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
   }
 
   .badge-success {
