@@ -12,15 +12,15 @@
     </div>
     <div class="col-progress">
       <div class="progress-bar">
-        <div class="progress" :class="{'progress-success': completed}" :style="{width: completedPercentage}"></div>
+        <div class="progress" :class="{'progress-success': (status === 'active' || status === 'complete') && completedLength === totalLength}" :style="{width: completedPercentage}"></div>
       </div>
       <div class="detail">
-        <div v-if="status ==='active'">{{secondsToString(remainingTime)}}</div>
-        <div v-if="status ==='active'">{{completedPercentage}}</div>
+        <div v-if="status === 'active'">{{secondsToString(remainingTime)}}</div>
+        <div v-if="status === 'active'">{{completedPercentage}}</div>
       </div>
     </div>
     <div class="col-speed"  v-if="!finished">
-      <div v-if="status ==='active' && !completed && downloadSpeed !== 0">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
+      <div v-if="status ==='active' && completedLength !== totalLength && downloadSpeed !== 0">{{bytesToString(downloadSpeed, 1) + 'B/s'}}</div>
     </div>
   </div>
 </template>
@@ -57,9 +57,6 @@
       }
     },
     computed: {
-      completed: function () {
-        return this.status === 'active' && this.completedLength === this.totalLength
-      },
       finished: function () {
         return this.status === 'complete' || this.status === 'removed' || this.status === 'error'
       },
