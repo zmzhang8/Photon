@@ -37,6 +37,6 @@
   body {
     margin: 0px;
     background-color: #fff;
-    font-family: Arial, Helvetica, sans-serif, "Microsoft YaHei", STHeiti, "Wenquanyi Micro Hei", "WenQuanYi Zen Hei";
+    font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   }
 </style>
