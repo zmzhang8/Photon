@@ -12,7 +12,7 @@
     </div>
     <div class="col-progress">
       <div class="progress-bar">
-        <div class="progress" :class="{'progress-success': (status === 'active' || status === 'complete') && completedLength === totalLength}" :style="{width: completedPercentage}"></div>
+        <div class="progress" :class="{'progress-success': completedLength === totalLength}" :style="{width: completedPercentage}"></div>
       </div>
       <div class="detail">
         <div v-if="status === 'active'">{{secondsToString(remainingTime)}}</div>
