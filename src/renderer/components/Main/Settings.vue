@@ -59,12 +59,12 @@
       </div>
       <div id="settings-download" class="group">
         <div class="header">{{ $t("message.settings.download") }}</div>
-        <div class="row" v-if="settings.isDefault">
+        <div class="row">
           <div class="left">
             <label for="settings-download-path">{{ $t("message.settings.directory") }}</label>
           </div>
           <div class="right pair">
-            <label for="settings-download-path-choose" class="button fixed">{{ $t("message.settings.choose") }}</label>
+            <label for="settings-download-path-choose" class="button fixed" :class="{'disabled': !settings.isDefault}">{{ $t("message.settings.choose") }}</label>
             <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
             <input class="expanded" type="text" disabled v-model="settings.options['dir']">
           </div>

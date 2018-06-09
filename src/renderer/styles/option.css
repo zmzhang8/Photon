@@ -79,7 +79,7 @@ input:invalid {
 input:disabled {
   border: 1px solid #ddd;
   color: #444;
-  opacity: 0.65;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -117,15 +117,7 @@ input:disabled {
 }
 
 .disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: default;
   pointer-events: none;
-}
-
-.inactive {
-  opacity: 0.65;
-}
-
-.inactive:hover {
-  cursor: not-allowed;
 }
