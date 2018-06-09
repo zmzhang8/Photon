@@ -8,8 +8,8 @@ import router from './router'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
-
 Vue.use(VueI18n)
+
 const messages = {
   'en-US': { message: require('@/lang/en-US.json') },
   'zh-CN': { message: require('@/lang/zh-CN.json') }
@@ -24,6 +24,7 @@ let aria2manager = new Aria2Manager()
 aria2manager.syncTasksAll()
 aria2manager.setSyncInterval(1000)
 
+/* eslint-disable no-new */
 new Vue({
   components: {
     App
@@ -36,7 +37,9 @@ new Vue({
   }
 }).$mount('#app')
 
-// Electron
+/*
+  Electron
+*/
 const os = require('os')
 const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
