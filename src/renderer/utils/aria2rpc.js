@@ -1,19 +1,38 @@
-import JSONRPC from './jsonrpc'
+import { RPCHTTP, RPCWebSocket } from './jsonrpc'
 
 const id = 'qwer'
 const maxTaskNumber = 1000
 const taskStatusKeys = ['gid', 'status', 'totalLength', 'completedLength', 'uploadLength', 'downloadSpeed', 'uploadSpeed', 'connections', 'dir', 'files', 'bittorrent', 'errorCallbackCode', 'errorCallbackMessage']
 
 export default class Aria2RPC {
-  constructor (address = '127.0.0.1', port = 6800, token = '', httpsEnabled = false) {
-    this._url = (httpsEnabled ? 'https' : 'http') + '://' + address + ':' + port + '/jsonrpc'
+  constructor (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
+    let address = host + ':' + port + '/jsonrpc'
+    this._url = (encryption ? 'https' : 'http') + '://' + address
     this._token = 'token:' + token
-    this._jsonrpc = new JSONRPC('aria2')
+    this._rpcHTTP = new RPCHTTP('aria2')
+    this._rpcSocket = new RPCWebSocket('aria2', (encryption ? 'wss' : 'ws') + '://' + address)
   }
 
-  setRPC (address = '127.0.0.1', port = 6800, token = '', httpsEnabled = false) {
-    this._url = (httpsEnabled ? 'https' : 'http') + '://' + address + ':' + port + '/jsonrpc'
+  setRPC (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
+    let address = host + ':' + port + '/jsonrpc'
     this._token = 'token:' + token
+    this._url = (encryption ? 'https' : 'http') + '://' + address
+    this._rpcSocket.setSocket((encryption ? 'wss' : 'ws') + '://' + address)
+  }
+
+  onDownloadComplete (callback) {
+    const method = 'onDownloadComplete'
+    this._setListener(method, callback)
+  }
+
+  onDownloadError (callback) {
+    const method = 'onDownloadError'
+    this._setListener(method, callback)
+  }
+
+  onBtDownloadComplete (callback) {
+    const method = 'onBtDownloadComplete'
+    this._setListener(method, callback)
   }
 
   addUri (uris, options = {}, successCallback, errorCallback) {
@@ -141,12 +160,17 @@ export default class Aria2RPC {
     this._request(method, [], successCallback, errorCallback)
   }
 
+  _setListener (method, callback) {
+    this._rpcSocket.setListener(method, result => {
+      this._resultHandler(method, result, callback)
+    })
+  }
+
   _request (method, params, successCallback, errorCallback) {
-    this._jsonrpc.request(this._url, method, [this._token].concat(params), id, result => {
-      this._resultHandler(method, result)
-      if (typeof (successCallback) === 'function') successCallback(result.result)
+    this._rpcHTTP.request(this._url, method, [this._token].concat(params), id, result => {
+      this._resultHandler(method, result, successCallback, errorCallback)
     }, error => {
-      if (typeof (errorCallback) === 'function') errorCallback(error)
+      if (typeof errorCallback === 'function') errorCallback(error)
     })
   }
 
@@ -158,22 +182,21 @@ export default class Aria2RPC {
         id: id
       }
     })
-    this._jsonrpc.batchRequest(this._url, requests, results => {
-      results.forEach(result => {
-        this._resultHandler(method, result)
-      })
-      if (typeof (successCallback) === 'function') successCallback(results)
+    this._rpcHTTP.batchRequest(this._url, requests, results => {
+      results.forEach(result => this._resultHandler(method, result, successCallback, errorCallback))
     }, error => {
-      if (typeof (errorCallback) === 'function') errorCallback(error)
+      if (typeof errorCallback === 'function') errorCallback(error)
     })
   }
 
-  _resultHandler (method, result) {
+  _resultHandler (method, result, successCallback, errorCallback) {
     if (result.hasOwnProperty('error')) {
-      console.warn('[aria2.' + method + ' error]: ' + result.error.code + ' ' + result.error.message)
+      let error = result.error
+      console.warn('[aria2.' + method + ' error]: ' + error.code + ' ' + error.message)
+      if (typeof errorCallback === 'function') errorCallback(Error(error.code + ' ' + error.message))
     } else {
-      let message = '[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : '')
-      console.log(message)
+      // console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
+      if (typeof successCallback === 'function') successCallback(result.result || result.params)
     }
   }
 }

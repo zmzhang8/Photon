@@ -4,7 +4,7 @@ const defaultRPC = {
   address: '127.0.0.1',
   port: '6800',
   token: '',
-  httpsEnabled: false
+  encryption: false
 }
 
 const defaultOptions = {
@@ -23,7 +23,7 @@ export default class Aria2Server {
     this.name = name
     this.rpc = Object.assign({}, rpc)
     this.options = Object.assign({}, options)
-    this.handler = new Aria2RPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
+    this.handle = new Aria2RPC(rpc.address, rpc.port, rpc.token, rpc.encryption)
     this.connection = false
     this.tasks = {
       active: [],
@@ -35,57 +35,49 @@ export default class Aria2Server {
 
   addUri (uris = [], seeding = false) {
     let options = seeding ? defaultSeedingOptions : {}
-    this.handler.addUri(uris, options, result => {
-      this.syncTasks()
-    })
+    this.handle.addUri(uris, options, result => this.syncTasks())
   }
 
   addTorrent (torrent, seeding = false) {
     let options = seeding ? defaultSeedingOptions : {}
-    this.handler.addTorrent(torrent, options, result => {
-      this.syncTasks()
-    })
+    this.handle.addTorrent(torrent, options, result => this.syncTasks())
   }
 
   addMetalink (metalink, seeding = false) {
     let options = seeding ? defaultSeedingOptions : {}
-    this.handler.addTorrent(metalink, options, result => {
-      this.syncTasks()
-    })
+    this.handle.addTorrent(metalink, options, result => this.syncTasks())
   }
 
   changeTaskStatus (method, gids = []) {
-    if (method === 'unpause') this.handler.unpause(gids, result => this.syncTasks())
-    else if (method === 'pause') this.handler.pause(gids, result => this.syncTasks())
-    else if (method === 'remove') this.handler.remove(gids, result => this.syncTasks())
+    if (method === 'unpause') this.handle.unpause(gids, result => this.syncTasks())
+    else if (method === 'pause') this.handle.pause(gids, result => this.syncTasks())
+    else if (method === 'remove') this.handle.remove(gids, result => this.syncTasks())
   }
 
   purgeTasks (gids = []) {
-    this.handler.removeDownloadResult(gids, result => {
-      this.syncTasks()
-    })
+    this.handle.removeDownloadResult(gids, result => this.syncTasks())
   }
 
   syncTasks () {
-    let handler = this.handler
+    let handle = this.handle
     let tasks = this.tasks
-    handler.tellActive(results => {
+    handle.tellActive(results => {
       tasks.active = results.map(result => this._formatTask(result))
     })
-    handler.tellWaiting(results => {
+    handle.tellWaiting(results => {
       tasks.waiting = results.filter(result => result.status === 'waiting')
         .map(result => this._formatTask(result))
       tasks.paused = results.filter(result => result.status === 'paused')
         .map(result => this._formatTask(result))
     })
-    handler.tellStopped(results => {
+    handle.tellStopped(results => {
       tasks.stopped = results.map(result => this._formatTask(result))
     })
   }
 
   syncOptions () {
     let options = this.options
-    this.handler.getGlobalOption(result => {
+    this.handle.getGlobalOption(result => {
       options['dir'] = result['dir']
       options['max-concurrent-downloads'] = parseInt(result['max-concurrent-downloads'])
       options['max-overall-download-limit'] = parseInt(result['max-overall-download-limit'])
@@ -94,7 +86,7 @@ export default class Aria2Server {
   }
 
   checkConnection () {
-    this.handler.getVersion(result => {
+    this.handle.getVersion(result => {
       this.connection = true
     }, e => {
       this.connection = false
@@ -115,8 +107,8 @@ export default class Aria2Server {
     let dir = this.options['dir']
     this.options = Object.assign({}, options)
     if (ignoreDir) this.options['dir'] = dir
-    this.handler.setRPC(rpc.address, rpc.port, rpc.token, rpc.httpsEnabled)
-    this.handler.changeGlobalOption(options)
+    this.handle.setRPC(rpc.address, rpc.port, rpc.token, rpc.encryption)
+    this.handle.changeGlobalOption(options)
   }
 
   _formatTask (task) {

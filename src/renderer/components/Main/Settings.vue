@@ -44,7 +44,7 @@
             <label for="settings-rpc-protocol">{{ $t("message.settings.https") }}</label>
           </div>
           <div class="right">
-            <input type="checkbox" v-model="settings.rpc.httpsEnabled">
+            <input type="checkbox" v-model="settings.rpc.encryption">
           </div>
         </div>
         <div class="row">
