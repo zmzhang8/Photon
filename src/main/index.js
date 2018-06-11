@@ -99,7 +99,7 @@ const menuTemplate = [{
 ]
 
 app.on('ready', () => {
-  aria2process = startAria2()
+  if (!aria2process) aria2process = startAria2()
   createWindow()
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   mainWindow.setMenu(null)
@@ -167,9 +167,7 @@ function startAria2 () {
   if (!options.hasOwnProperty('dir')) options['dir'] = join(homedir, 'Downloads')
 
   let command = '"' + aria2c + '" --conf-path="' + conf + '"'
-  Object.keys(options).forEach(key => {
-    command += ' --' + key + '="' + options[key] + '"'
-  })
+  for (let key in options) command += ' --' + key + '="' + options[key] + '"'
   return exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(error.message)
