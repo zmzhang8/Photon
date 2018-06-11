@@ -7,7 +7,7 @@
         <label for="new-task-urls">{{ $t("message.newTask.urls") }}</label>
       </div>
       <div class="right">
-        <textarea id="new-task-urls" v-model="urls"></textarea>
+        <textarea id="new-task-urls" v-model="uris"></textarea>
       </div>
     </div>
     <div class="row">
@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="row vspace">
-    <div class="button button-large" :class="{'disabled': !urls && !file}" @click="start()">{{ $t("message.newTask.start") }}</div>
+    <div class="button button-large" :class="{'disabled': !uris && !file}" @click="start()">{{ $t("message.newTask.start") }}</div>
     <div class="button button-large hspace" @click="cancel()">{{ $t("message.newTask.cancel") }}</div>
   </div>
 </div>
@@ -41,7 +41,7 @@ export default {
   data: function () {
     return {
       type: 'http',
-      urls: '',
+      uris: '',
       file: undefined,
       filePath: '',
       seeding: true
@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     urlList: function () {
-      return this.urls ? this.urls.split(/\n+/) : []
+      return this.uris ? this.uris.split(/\n+/) : []
     }
   },
   methods: {
@@ -75,7 +75,7 @@ export default {
     start: function () {
       this.$emit('addTask', {
         type: this.type,
-        urls: this.urlList,
+        uris: this.urlList,
         file: this.file,
         seeding: this.seeding
       })

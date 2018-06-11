@@ -6,33 +6,16 @@ const taskStatusKeys = ['gid', 'status', 'totalLength', 'completedLength', 'uplo
 
 export default class Aria2RPC {
   constructor (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
-    let address = host + ':' + port + '/jsonrpc'
-    this._url = (encryption ? 'https' : 'http') + '://' + address
-    this._token = 'token:' + token
-    this._rpcHTTP = new RPCHTTP('aria2')
-    this._rpcSocket = new RPCWebSocket('aria2', (encryption ? 'wss' : 'ws') + '://' + address)
+    this.setRPC(host, port, token, encryption)
   }
 
   setRPC (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
-    let address = host + ':' + port + '/jsonrpc'
+    let suffix = host + ':' + port + '/jsonrpc'
     this._token = 'token:' + token
-    this._url = (encryption ? 'https' : 'http') + '://' + address
-    this._rpcSocket.setSocket((encryption ? 'wss' : 'ws') + '://' + address)
-  }
-
-  onDownloadComplete (callback) {
-    const method = 'onDownloadComplete'
-    this._setListener(method, callback)
-  }
-
-  onDownloadError (callback) {
-    const method = 'onDownloadError'
-    this._setListener(method, callback)
-  }
-
-  onBtDownloadComplete (callback) {
-    const method = 'onBtDownloadComplete'
-    this._setListener(method, callback)
+    this._address = (encryption ? 'https' : 'http') + '://' + suffix
+    if (!this._rpcHTTP) this._rpcHTTP = new RPCHTTP('aria2')
+    if (!this._rpcSocket) this._rpcSocket = new RPCWebSocket('aria2', (encryption ? 'wss' : 'ws') + '://' + suffix)
+    else this._rpcSocket.setSocket((encryption ? 'wss' : 'ws') + '://' + suffix)
   }
 
   addUri (uris, options = {}, successCallback, errorCallback) {
@@ -54,48 +37,10 @@ export default class Aria2RPC {
     this._request(method, params, successCallback, errorCallback)
   }
 
-  remove (gids, successCallback, errorCallback) {
-    const method = 'remove'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  pause (gids, successCallback, errorCallback) {
-    const method = 'pause'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  pauseAll (successCallback, errorCallback) {
-    const method = 'pauseAll'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  unpause (gids, successCallback, errorCallback) {
-    const method = 'unpause'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  unpauseAll (successCallback, errorCallback) {
-    const method = 'unpauseAll'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   tellStatus (gids, successCallback, errorCallback) {
     const method = 'tellStatus'
     if (gids.constructor !== Array) gids = [gids]
     let paramsPool = gids.map(gid => [gid, taskStatusKeys])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  getUris (gids, successCallback, errorCallback) {
-    const method = 'getUris'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
     this._batchRequest(method, paramsPool, successCallback, errorCallback)
   }
 
@@ -114,11 +59,6 @@ export default class Aria2RPC {
     this._request(method, [0, maxTaskNumber, taskStatusKeys], successCallback, errorCallback)
   }
 
-  getGlobalOption (successCallback, errorCallback) {
-    const method = 'getGlobalOption'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   changeGlobalOption (options = {}, successCallback, errorCallback) {
     const method = 'changeGlobalOption'
     let param = {}
@@ -127,39 +67,6 @@ export default class Aria2RPC {
     }
     this._request(method, [param], successCallback, errorCallback)
   }
-
-  getGlobalStat (successCallback, errorCallback) {
-    const method = 'getGlobalStat'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  purgeDownloadResult (successCallback, errorCallback) {
-    const method = 'purgeDownloadResult'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  removeDownloadResult (gids, successCallback, errorCallback) {
-    const method = 'removeDownloadResult'
-    if (gids.constructor !== Array) gids = [gids]
-    let paramsPool = gids.map(gid => [gid])
-    this._batchRequest(method, paramsPool, successCallback, errorCallback)
-  }
-
-  getVersion (successCallback, errorCallback) {
-    const method = 'getVersion'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  shutdown (successCallback, errorCallback) {
-    const method = 'shutdown'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
-  saveSession (successCallback, errorCallback) {
-    const method = 'saveSession'
-    this._request(method, [], successCallback, errorCallback)
-  }
-
   _setListener (method, callback) {
     this._rpcSocket.setListener(method, result => {
       this._resultHandler(method, result, callback)
@@ -167,7 +74,7 @@ export default class Aria2RPC {
   }
 
   _request (method, params, successCallback, errorCallback) {
-    this._rpcHTTP.request(this._url, method, [this._token].concat(params), id, result => {
+    this._rpcHTTP.request(this._address, method, [this._token].concat(params), id, result => {
       this._resultHandler(method, result, successCallback, errorCallback)
     }, error => {
       if (typeof errorCallback === 'function') errorCallback(error)
@@ -182,7 +89,7 @@ export default class Aria2RPC {
         id: id
       }
     })
-    this._rpcHTTP.batchRequest(this._url, requests, results => {
+    this._rpcHTTP.batchRequest(this._address, requests, results => {
       results.forEach(result => this._resultHandler(method, result, successCallback, errorCallback))
     }, error => {
       if (typeof errorCallback === 'function') errorCallback(error)
@@ -195,8 +102,35 @@ export default class Aria2RPC {
       console.warn('[aria2.' + method + ' error]: ' + error.code + ' ' + error.message)
       if (typeof errorCallback === 'function') errorCallback(Error(error.code + ' ' + error.message))
     } else {
-      // console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
+      console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
       if (typeof successCallback === 'function') successCallback(result.result || result.params)
     }
   }
 }
+
+['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
+  Object.defineProperty(Aria2RPC.prototype, method, {
+    get: function () { },
+    set: function (callback) {
+      this._setListener(method, callback)
+    }
+  })
+});
+
+['remove', 'pause', 'unpause', 'getUris', 'removeDownloadResult'].forEach(method => {
+  Object.defineProperty(Aria2RPC.prototype, method, {
+    value: function (gids, successCallback, errorCallback) {
+      if (gids.constructor !== Array) gids = [gids]
+      let paramsPool = gids.map(gid => [gid])
+      this._batchRequest(method, paramsPool, successCallback, errorCallback)
+    }
+  })
+});
+
+['pauseAll', 'unpauseAll', 'getGlobalOption', 'getGlobalStat', 'purgeDownloadResult', 'getVersion', 'shutdown', 'saveSession'].forEach(method => {
+  Object.defineProperty(Aria2RPC.prototype, method, {
+    value: function (successCallback, errorCallback) {
+      this._request(method, [], successCallback, errorCallback)
+    }
+  })
+})

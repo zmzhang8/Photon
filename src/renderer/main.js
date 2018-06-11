@@ -21,7 +21,6 @@ const i18n = new VueI18n({
 })
 
 let aria2manager = new Aria2Manager()
-aria2manager.syncTasksAll()
 aria2manager.setSyncInterval(1000)
 
 /* eslint-disable no-new */
@@ -40,10 +39,8 @@ new Vue({
 /*
   Electron
 */
-const os = require('os')
 const AppData = require('../main/appdata').default
 const { app, powerSaveBlocker } = require('electron').remote
-const window = require('electron').remote.getCurrentWindow()
 const webFrame = require('electron').webFrame
 let aria2server = aria2manager.servers[0]
 
@@ -51,22 +48,24 @@ let aria2server = aria2manager.servers[0]
 webFrame.setZoomLevelLimits(1, 1)
 
 // set app badge (works for macOS and Unity)
-if (os.platform() === 'win32') {
-  setInterval(() => {
-    let number = aria2server.activeNumber()
-    if (number !== 0) window.setOverlayIcon('@/assets/badge.png', number)
-    else window.setOverlayIcon(null)
-  }, 1000)
-} else {
-  setInterval(() => {
-    app.setBadgeCount(aria2server.activeNumber())
-  }, 1000)
-}
+// const os = require('os')
+// const window = require('electron').remote.getCurrentWindow()
+// if (os.platform() === 'win32') {
+//   setInterval(() => {
+//     let number = aria2server.activeNumber()
+//     if (number !== 0) window.setOverlayIcon('@/assets/badge.png', number)
+//     else window.setOverlayIcon(null)
+//   }, 1000)
+// } else {
+//   setInterval(() => {
+//     app.setBadgeCount(aria2server.activeNumber())
+//   }, 1000)
+// }
 
 // prevent suspension when downloading
 let blocker
 setInterval(() => {
-  if (aria2server.isDownloading()) {
+  if (aria2server.isDownloading !== 0) {
     if (blocker === undefined || !powerSaveBlocker.isStarted(blocker)) blocker = powerSaveBlocker.start('prevent-app-suspension')
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)

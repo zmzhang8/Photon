@@ -3,6 +3,7 @@ import Aria2Server from './aria2server'
 export default class Aria2Manager {
   constructor () {
     this.servers = this._initServers()
+    this.serverIndex = 0
     this.sync = undefined
   }
 
@@ -10,25 +11,24 @@ export default class Aria2Manager {
     this.servers.push(new Aria2Server())
   }
 
-  removeServer (serverId) {
-    if (serverId >= 1 && serverId < this.servers.length) {
-      this.servers.splice(serverId, 1)
-    }
+  removeServer () {
+    if (this.servers.length !== 0) this.servers.splice(this.serverIndex, 1)
+    if (this.serverIndex >= this.servers.length) this.serverIndex = this.servers.length - 1
   }
 
-  setSyncInterval (interval) {
-    interval = interval || 3000
-    this.sync = setInterval(() => { this.syncTasksAll() }, interval)
+  setSyncInterval (interval = 3000) {
+    this.sync = setInterval(() => this.syncTasks(), interval)
   }
 
   clearSyncInterval () {
     clearInterval(this.sync)
   }
 
-  syncTasksAll () {
-    this.servers.forEach(server => {
-      server.checkConnection()
-      server.syncTasks()
+  syncTasks () {
+    let server = this.servers[this.serverIndex]
+    server.checkConnection(result => {
+      server.syncDownloading()
+      server.syncFinished()
     })
   }
 
@@ -45,12 +45,12 @@ export default class Aria2Manager {
     window.localStorage.setItem(this.constructor.name, JSON.stringify(data))
   }
 
+  _readStorage () {
+    return JSON.parse(window.localStorage.getItem(this.constructor.name)) || {}
+  }
+
   _initServers () {
     let servers = this._readStorage().servers || [{}]
     return servers.map(server => new Aria2Server(server.name, server.rpc, server.options))
-  }
-
-  _readStorage () {
-    return JSON.parse(window.localStorage.getItem(this.constructor.name)) || {}
   }
 }

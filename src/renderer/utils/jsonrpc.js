@@ -3,18 +3,18 @@ export class RPCHTTP {
     this._namespace = namespace
   }
 
-  request (url, method, params = [], id, successCallback, errorCallback) {
-    let data = this._getRequestData(method, params, id)
-    this._fetch(url, data, successCallback, errorCallback)
+  request (address, method, params = [], id, successCallback, errorCallback) {
+    let data = this._formatData(method, params, id)
+    this._fetch(address, data, successCallback, errorCallback)
   }
 
-  batchRequest (url, requests, successCallback, errorCallback) {
+  batchRequest (address, requests, successCallback, errorCallback) {
     if (requests.constructor !== Array) requests = [requests]
-    let data = requests.map(request => this._getRequestData(request.method, request.params, request.id))
-    this._fetch(url, data, successCallback, errorCallback)
+    let data = requests.map(request => this._formatData(request.method, request.params, request.id))
+    this._fetch(address, data, successCallback, errorCallback)
   }
 
-  _getRequestData (method, params = [], id = '0') {
+  _formatData (method, params = [], id = '0') {
     return {
       jsonrpc: '2.0',
       id: id,
@@ -23,8 +23,8 @@ export class RPCHTTP {
     }
   }
 
-  _fetch (url, data, successCallback, errorCallback) {
-    fetch(url, {
+  _fetch (address, data, successCallback, errorCallback) {
+    fetch(address, {
       method: 'POST',
       body: JSON.stringify(data)
     }).then(response => {
@@ -40,19 +40,19 @@ export class RPCHTTP {
 }
 
 export class RPCWebSocket {
-  constructor (namespace, url) {
+  constructor (namespace, address) {
     this._namespace = namespace
-    this.setSocket(url)
     this._listeners = {}
+    this.setSocket(address)
   }
 
-  setSocket (url) {
-    this._socket = new WebSocket(url)
-    let that = this
+  setSocket (address) {
+    this._socket = new WebSocket(address)
+    let listeners = this._listeners
     this._socket.onmessage = message => {
       let data = JSON.parse(message.data)
-      if (that._listeners.hasOwnProperty(data.method)) that._listeners[data.method](data)
-      else if (that._listeners.default) that._listeners.default(data)
+      if (listeners.hasOwnProperty(data.method)) listeners[data.method](data)
+      else if (listeners.default) listeners.default(data)
     }
     this._socket.onerror = error => console.error(error)
   }
@@ -66,17 +66,17 @@ export class RPCWebSocket {
   }
 
   request (method, params = [], id) {
-    let data = this._getRequestData(method, params, id)
+    let data = this._formatData(method, params, id)
     this._send(data)
   }
 
   batchRequest (requests) {
     if (requests.constructor !== Array) requests = [requests]
-    let data = requests.map(request => this._getRequestData(request.method, request.params, request.id))
+    let data = requests.map(request => this._formatData(request.method, request.params, request.id))
     this._send(data)
   }
 
-  _getRequestData (method, params = [], id = '0') {
+  _formatData (method, params = [], id = '0') {
     return {
       jsonrpc: '2.0',
       id: id,

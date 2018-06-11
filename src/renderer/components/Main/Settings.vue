@@ -2,14 +2,14 @@
 <div id="settings">
   <div class="content">
     <form @change="$emit('updateSettings')">
-      <div id="settings-config" class="group" v-if="!settings.isDefault">
-        <div class="header">{{ $t("message.settings.config") }}</div>
+      <div id="settings-general" class="group" v-if="!settings.isDefault">
+        <div class="header">{{ $t("message.settings.general") }}</div>
         <div class="row">
           <div class="left">
-            <label for="settings-config-name">{{ $t("message.settings.name") }}</label>
+            <label for="settings-general-config">{{ $t("message.settings.config") }}</label>
           </div>
           <div class="right">
-            <input id="settings-config-name" type="text" required v-model="settings.name">
+            <input id="settings-general-config" type="text" required v-model="settings.name">
           </div>
         </div>
       </div>
@@ -17,10 +17,10 @@
         <div class="header">{{ $t("message.settings.rpc") }}</div>
         <div class="row">
           <div class="left">
-            <label for="settings-rpc-address">{{ $t("message.settings.address") }}</label>
+            <label for="settings-rpc-address">{{ $t("message.settings.host") }}</label>
           </div>
           <div class="right">
-            <input id="settings-rpc-address" type="text" required v-model="settings.rpc.address">
+            <input id="settings-rpc-address" type="text" required v-model="settings.rpc.host">
           </div>
         </div>
         <div class="row">
@@ -41,7 +41,7 @@
         </div>
         <div class="row">
           <div class="left">
-            <label for="settings-rpc-protocol">{{ $t("message.settings.https") }}</label>
+            <label for="settings-rpc-protocol">{{ $t("message.settings.encryption") }}</label>
           </div>
           <div class="right">
             <input type="checkbox" v-model="settings.rpc.encryption">
@@ -71,10 +71,10 @@
         </div>
         <div class="row">
           <div class="left">
-            <label for="settings-download-max-active">{{ $t("message.settings.maxActive") }}</label>
+            <label for="settings-download-max-downloading">{{ $t("message.settings.maxDownloading") }}</label>
           </div>
           <div class="right">
-            <input id="settings-download-max-active" type="number" min="1" max="100" step="1" required v-model.number="settings.options['max-concurrent-downloads']">
+            <input id="settings-download-max-downloading" type="number" min="1" max="100" step="1" required v-model.number="settings.options['max-concurrent-downloads']">
           </div>
         </div>
         <div class="row">
@@ -133,9 +133,7 @@ export default {
   methods: {
     setDir: function (event) {
       let files = event.target.files
-      if (files.length) {
-        this.settings.options['dir'] = files[0].path
-      }
+      if (files.length) this.settings.options['dir'] = files[0].path
     },
     setLimitNumber: function (event, type) {
       let number = parseInt(event.target.value) || 0

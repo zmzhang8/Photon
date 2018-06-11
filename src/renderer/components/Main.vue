@@ -13,8 +13,8 @@
         <i class="fas fa-arrow-down"></i>
       </div>
       <div class="title">{{ $t("message.main.downloading") }}</div>
-      <div class="status" v-if="activeNumber">
-        <span class="bubble">{{ activeNumber }}</span>
+      <div class="status" v-if="downloadingNumber">
+        <span class="bubble">{{ downloadingNumber }}</span>
       </div>
     </router-link>
     <router-link to="/finished" id="sidebar-finished" class="row">
@@ -63,7 +63,7 @@ export default {
     serverName: function () {
       return this.isDefault ? 'Photon' : this.server.name
     },
-    activeNumber: function () {
+    downloadingNumber: function () {
       let tasks = this.server.tasks
       return tasks.active.length + tasks.waiting.length
     },
@@ -92,12 +92,8 @@ export default {
     syncOptions: function () {
       this.server.syncOptions()
     },
-    addTask: function (event) {
-      let server = this.server
-      if (event.file) {
-        if (event.type === 'torrent') server.addTorrent(event.file, event.seeding)
-        else if (event.type === 'metalink') server.addMetalink(event.file, event.seeding)
-      } else server.addUri(event.urls, event.seeding)
+    addTask: function (task) {
+      this.server.addTask(task)
     },
     changeTaskStatus: function (event) {
       this.server.changeTaskStatus(event.method, event.gids)
@@ -109,7 +105,6 @@ export default {
       let server = this.server
       let settings = this.settings
       server.setServer(settings.name, settings.rpc, settings.options, !this.isDefault)
-      server.checkConnection()
       this.$emit('updateServer')
     }
   }

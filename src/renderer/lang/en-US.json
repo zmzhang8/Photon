@@ -14,20 +14,20 @@
     "cancel": "Cancel"
   },
   "settings": {
+    "general": "General",
     "config": "Config",
-    "name": "Name",
     "rpc": "RPC",
-    "address": "Address",
+    "host": "Host",
     "port": "Port",
     "token": "Token",
-    "https": "HTTPS",
+    "encryption": "SSL / TLS",
     "status": "Status",
     "connected": "Connected",
     "disconnected": "Not Connected",
     "download": "Download",
     "directory": "Directory",
     "choose": "Choose",
-    "maxActive": "Max Active",
+    "maxDownloading": "Max Downloading",
     "downloadLimit": "Download Limit",
     "uploadLimit": "Upload Limit"
   }

@@ -1,7 +1,7 @@
 import Aria2RPC from './aria2rpc'
 
 const defaultRPC = {
-  address: '127.0.0.1',
+  host: '127.0.0.1',
   port: '6800',
   token: '',
   encryption: false
@@ -18,12 +18,18 @@ const defaultSeedingOptions = {
   'seed-ratio': '10'
 }
 
+const defaultNoSeedingOptions = {
+  'seed-time': '0',
+  'seed-ratio': '0.1'
+}
+
 export default class Aria2Server {
   constructor (name = 'Default', rpc = defaultRPC, options = defaultOptions) {
+    this._handle = new Aria2RPC(rpc.host, rpc.port, rpc.token, rpc.encryption)
+
     this.name = name
     this.rpc = Object.assign({}, rpc)
     this.options = Object.assign({}, options)
-    this.handle = new Aria2RPC(rpc.address, rpc.port, rpc.token, rpc.encryption)
     this.connection = false
     this.tasks = {
       active: [],
@@ -33,72 +39,8 @@ export default class Aria2Server {
     }
   }
 
-  addUri (uris = [], seeding = false) {
-    let options = seeding ? defaultSeedingOptions : {}
-    this.handle.addUri(uris, options, result => this.syncTasks())
-  }
-
-  addTorrent (torrent, seeding = false) {
-    let options = seeding ? defaultSeedingOptions : {}
-    this.handle.addTorrent(torrent, options, result => this.syncTasks())
-  }
-
-  addMetalink (metalink, seeding = false) {
-    let options = seeding ? defaultSeedingOptions : {}
-    this.handle.addTorrent(metalink, options, result => this.syncTasks())
-  }
-
-  changeTaskStatus (method, gids = []) {
-    if (method === 'unpause') this.handle.unpause(gids, result => this.syncTasks())
-    else if (method === 'pause') this.handle.pause(gids, result => this.syncTasks())
-    else if (method === 'remove') this.handle.remove(gids, result => this.syncTasks())
-  }
-
-  purgeTasks (gids = []) {
-    this.handle.removeDownloadResult(gids, result => this.syncTasks())
-  }
-
-  syncTasks () {
-    let handle = this.handle
-    let tasks = this.tasks
-    handle.tellActive(results => {
-      tasks.active = results.map(result => this._formatTask(result))
-    })
-    handle.tellWaiting(results => {
-      tasks.waiting = results.filter(result => result.status === 'waiting')
-        .map(result => this._formatTask(result))
-      tasks.paused = results.filter(result => result.status === 'paused')
-        .map(result => this._formatTask(result))
-    })
-    handle.tellStopped(results => {
-      tasks.stopped = results.map(result => this._formatTask(result))
-    })
-  }
-
-  syncOptions () {
-    let options = this.options
-    this.handle.getGlobalOption(result => {
-      options['dir'] = result['dir']
-      options['max-concurrent-downloads'] = parseInt(result['max-concurrent-downloads'])
-      options['max-overall-download-limit'] = parseInt(result['max-overall-download-limit'])
-      options['max-overall-upload-limit'] = parseInt(result['max-overall-upload-limit'])
-    })
-  }
-
-  checkConnection () {
-    this.handle.getVersion(result => {
-      this.connection = true
-    }, e => {
-      this.connection = false
-    })
-  }
-
-  isDownloading () {
+  get isDownloading () {
     return this.tasks.active.some(task => task.completedLength !== task.totalLength)
-  }
-
-  activeNumber () {
-    return this.tasks.active.length + this.tasks.waiting.length
   }
 
   setServer (name = 'Default', rpc = defaultRPC, options = defaultOptions, ignoreDir = true) {
@@ -107,8 +49,76 @@ export default class Aria2Server {
     let dir = this.options['dir']
     this.options = Object.assign({}, options)
     if (ignoreDir) this.options['dir'] = dir
-    this.handle.setRPC(rpc.address, rpc.port, rpc.token, rpc.encryption)
-    this.handle.changeGlobalOption(options)
+    this._handle.setRPC(rpc.host, rpc.port, rpc.token, rpc.encryption)
+    this._handle.changeGlobalOption(options)
+  }
+
+  checkConnection (successCallback, errorCallback) {
+    let that = this
+    this._handle.getVersion(result => {
+      that.connection = true
+      if (typeof successCallback === 'function') successCallback(result)
+    }, error => {
+      that.connection = false
+      if (typeof errorCallback === 'function') errorCallback(error)
+    })
+  }
+
+  addTask (task, successCallback, errorCallback) {
+    let handle = this._handle
+    let options = task.seeding ? defaultSeedingOptions : defaultNoSeedingOptions
+    switch (task.type) {
+      case 'torrent':
+        handle.addTorrent(task.file, options, successCallback, errorCallback)
+        break
+      case 'metalink':
+        handle.addMetalink(task.file, options, successCallback, errorCallback)
+        break
+      case 'http':
+        handle.addUri(task.uris, options, successCallback, errorCallback)
+        break
+      default:
+    }
+  }
+
+  changeTaskStatus (method, gids = [], successCallback, errorCallback) {
+    if (method === 'unpause') this._handle.unpause(gids, successCallback, errorCallback)
+    else if (method === 'pause') this._handle.pause(gids, successCallback, errorCallback)
+    else if (method === 'remove') this._handle.remove(gids, successCallback, errorCallback)
+  }
+
+  purgeTasks (gids = [], successCallback, errorCallback) {
+    this._handle.removeDownloadResult(gids, successCallback, errorCallback)
+  }
+
+  syncDownloading () {
+    let tasks = this.tasks
+    this._handle.tellActive(results => {
+      tasks.active = results.map(result => this._formatTask(result))
+    })
+    this._handle.tellWaiting(results => {
+      tasks.waiting = results.filter(result => result.status === 'waiting')
+        .map(result => this._formatTask(result))
+      tasks.paused = results.filter(result => result.status === 'paused')
+        .map(result => this._formatTask(result))
+    })
+  }
+
+  syncFinished () {
+    let tasks = this.tasks
+    this._handle.tellStopped(results => {
+      tasks.stopped = results.map(result => this._formatTask(result))
+    })
+  }
+
+  syncOptions () {
+    let options = this.options
+    this._handle.getGlobalOption(result => {
+      options['dir'] = result['dir']
+      options['max-concurrent-downloads'] = parseInt(result['max-concurrent-downloads'])
+      options['max-overall-download-limit'] = parseInt(result['max-overall-download-limit'])
+      options['max-overall-upload-limit'] = parseInt(result['max-overall-upload-limit'])
+    })
   }
 
   _formatTask (task) {
@@ -130,3 +140,21 @@ export default class Aria2Server {
     }
   }
 }
+
+['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
+  Object.defineProperty(Aria2Server.prototype, method, {
+    get: function () { },
+    set: function (callback) {
+      let handle = this._handle
+      let formatTask = this._formatTask
+      handle.onDownloadComplete = results => {
+        if (typeof callback === 'function') {
+          let gids = results.map(result => result.gid)
+          handle.tellStatus(gids, tasks => {
+            callback(tasks.map(task => formatTask(task)))
+          })
+        }
+      }
+    }
+  })
+})

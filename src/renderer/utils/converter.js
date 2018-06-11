@@ -3,7 +3,7 @@ export default class Converter {
     if (!seconds || seconds === Infinity) return ''
     if (typeof (seconds) === 'string') seconds = parseInt(seconds)
     if (seconds >= 86400) {
-      return 'More than one day'
+      return '> 1 day'
     } else {
       let hours = Math.floor(seconds / 3600)
       seconds %= 3600
