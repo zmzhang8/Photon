@@ -50,7 +50,9 @@ export default class Aria2Server {
     this.options = Object.assign({}, options)
     if (ignoreDir) this.options['dir'] = dir
     this._handle.setRPC(rpc.host, rpc.port, rpc.token, rpc.encryption)
-    this._handle.changeGlobalOption(options)
+    let strOptions = {}
+    for (let key in options) strOptions[key] = options[key].toString()
+    this._handle.changeGlobalOption(strOptions)
   }
 
   checkConnection (successCallback, errorCallback) {
@@ -95,12 +97,17 @@ export default class Aria2Server {
     let tasks = this.tasks
     this._handle.tellActive(results => {
       tasks.active = results.map(result => this._formatTask(result))
+    }, e => {
+      tasks.active = []
     })
     this._handle.tellWaiting(results => {
       tasks.waiting = results.filter(result => result.status === 'waiting')
         .map(result => this._formatTask(result))
       tasks.paused = results.filter(result => result.status === 'paused')
         .map(result => this._formatTask(result))
+    }, e => {
+      tasks.waiting = []
+      tasks.paused = []
     })
   }
 
@@ -108,6 +115,8 @@ export default class Aria2Server {
     let tasks = this.tasks
     this._handle.tellStopped(results => {
       tasks.stopped = results.map(result => this._formatTask(result))
+    }, e => {
+      tasks.stopped = []
     })
   }
 
@@ -148,12 +157,10 @@ export default class Aria2Server {
       let handle = this._handle
       let formatTask = this._formatTask
       handle.onDownloadComplete = results => {
-        if (typeof callback === 'function') {
-          let gids = results.map(result => result.gid)
-          handle.tellStatus(gids, tasks => {
-            callback(tasks.map(task => formatTask(task)))
-          })
-        }
+        let gids = results.map(result => result.gid)
+        handle.tellStatus(gids, tasks => {
+          if (typeof callback === 'function') callback(tasks.map(task => formatTask(task)))
+        })
       }
     }
   })

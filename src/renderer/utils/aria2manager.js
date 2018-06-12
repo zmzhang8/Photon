@@ -7,6 +7,27 @@ export default class Aria2Manager {
     this.sync = undefined
   }
 
+  set onDownloadComplete (callback) {
+    this.servers.forEach(server => {
+      server.onDownloadComplete = tasks => {
+        if (typeof callback === 'function') callback(server.name, tasks)
+      }
+    })
+    this.servers.forEach(server => {
+      server.onBtDownloadComplete = tasks => {
+        if (typeof callback === 'function') callback(server.name, tasks)
+      }
+    })
+  }
+
+  set onDownloadError (callback) {
+    this.servers.forEach(server => {
+      server.onDownloadError = tasks => {
+        if (typeof callback === 'function') callback(server.name, tasks)
+      }
+    })
+  }
+
   addServer () {
     this.servers.push(new Aria2Server())
   }
@@ -26,10 +47,9 @@ export default class Aria2Manager {
 
   syncTasks () {
     let server = this.servers[this.serverIndex]
-    server.checkConnection(result => {
-      server.syncDownloading()
-      server.syncFinished()
-    })
+    server.checkConnection()
+    server.syncDownloading()
+    server.syncFinished()
   }
 
   writeStorage () {

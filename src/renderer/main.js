@@ -6,6 +6,15 @@ import Aria2Manager from '@/utils/aria2manager'
 import App from './App'
 import router from './router'
 
+/*
+  aria2
+*/
+let aria2manager = new Aria2Manager()
+aria2manager.setSyncInterval(1000)
+
+/*
+  Vue
+*/
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 Vue.use(VueI18n)
@@ -20,14 +29,8 @@ const i18n = new VueI18n({
   messages
 })
 
-let aria2manager = new Aria2Manager()
-aria2manager.setSyncInterval(1000)
-
-/* eslint-disable no-new */
 new Vue({
-  components: {
-    App
-  },
+  components: { App },
   router,
   i18n,
   template: '<App :manager="manager"></App>',
@@ -75,3 +78,6 @@ setInterval(() => {
 app.on('will-quit', () => {
   AppData.writeData(aria2server.options)
 })
+
+// aria2server._handle._rpcSocket.request('addUri', [['https://www.7-zip.org/a/7z1805-x64.msi'], {}])
+// aria2server._handle._rpcSocket.request('getGlobalOption', [])

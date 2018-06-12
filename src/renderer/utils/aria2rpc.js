@@ -1,21 +1,27 @@
 import { RPCHTTP, RPCWebSocket } from './jsonrpc'
 
-const id = 'qwer'
 const maxTaskNumber = 1000
 const taskStatusKeys = ['gid', 'status', 'totalLength', 'completedLength', 'uploadLength', 'downloadSpeed', 'uploadSpeed', 'connections', 'dir', 'files', 'bittorrent', 'errorCallbackCode', 'errorCallbackMessage']
 
 export default class Aria2RPC {
   constructor (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
+    this._date = new Date()
     this.setRPC(host, port, token, encryption)
   }
 
   setRPC (host = '127.0.0.1', port = 6800, token = '', encryption = false) {
-    let suffix = host + ':' + port + '/jsonrpc'
     this._token = 'token:' + token
-    this._address = (encryption ? 'https' : 'http') + '://' + suffix
-    if (!this._rpcHTTP) this._rpcHTTP = new RPCHTTP('aria2')
-    if (!this._rpcSocket) this._rpcSocket = new RPCWebSocket('aria2', (encryption ? 'wss' : 'ws') + '://' + suffix)
-    else this._rpcSocket.setSocket((encryption ? 'wss' : 'ws') + '://' + suffix)
+    this._address = host + ':' + port + '/jsonrpc'
+    if (this._rpc) this._rpc.setAddress(this._address, encryption)
+    else {
+      try {
+        this._rpc = new RPCWebSocket(this._address, encryption, 'aria2')
+      } catch (error) {
+        console.error(error.message)
+        console.warn('Fall back to HTTP request.')
+        this._rpc = new RPCHTTP(this._address, encryption, 'aria2')
+      }
+    }
   }
 
   addUri (uris, options = {}, successCallback, errorCallback) {
@@ -27,14 +33,12 @@ export default class Aria2RPC {
 
   addTorrent (torrent, options = {}, successCallback, errorCallback) {
     const method = 'addTorrent'
-    let params = [torrent, [], options]
-    this._request(method, params, successCallback, errorCallback)
+    this._request(method, [torrent, [], options], successCallback, errorCallback)
   }
 
   addMetalink (metalink, options = {}, successCallback, errorCallback) {
     const method = 'addMetalink'
-    let params = [metalink, [], options]
-    this._request(method, params, successCallback, errorCallback)
+    this._request(method, [metalink, [], options], successCallback, errorCallback)
   }
 
   tellStatus (gids, successCallback, errorCallback) {
@@ -61,27 +65,26 @@ export default class Aria2RPC {
 
   changeGlobalOption (options = {}, successCallback, errorCallback) {
     const method = 'changeGlobalOption'
-    let param = {}
-    for (let key in options) {
-      param[key] = typeof options[key] === 'string' ? options[key] : options[key].toString()
-    }
-    this._request(method, [param], successCallback, errorCallback)
+    this._request(method, [options], successCallback, errorCallback)
   }
-  _setListener (method, callback) {
-    this._rpcSocket.setListener(method, result => {
-      this._resultHandler(method, result, callback)
+
+  _addListener (method, callback) {
+    let resultHandler = this._resultHandler
+    this._rpcSocket.addListener(method, result => {
+      resultHandler(method, result, callback)
     })
   }
 
   _request (method, params, successCallback, errorCallback) {
-    this._rpcHTTP.request(this._address, method, [this._token].concat(params), id, result => {
-      this._resultHandler(method, result, successCallback, errorCallback)
-    }, error => {
-      if (typeof errorCallback === 'function') errorCallback(error)
-    })
+    let resultHandler = this._resultHandler
+    let id = method + '.' + this._date.getTime()
+    this._rpc.request(method, [this._token].concat(params), id, result => {
+      resultHandler(method, result, successCallback, errorCallback)
+    }, errorCallback)
   }
 
   _batchRequest (method, paramsPool, successCallback, errorCallback) {
+    let id = method + '.' + this._date.getTime()
     let requests = paramsPool.map(params => {
       return {
         method: method,
@@ -89,11 +92,10 @@ export default class Aria2RPC {
         id: id
       }
     })
-    this._rpcHTTP.batchRequest(this._address, requests, results => {
-      results.forEach(result => this._resultHandler(method, result, successCallback, errorCallback))
-    }, error => {
-      if (typeof errorCallback === 'function') errorCallback(error)
-    })
+    let resultHandler = this._resultHandler
+    this._rpc.batchRequest(requests, results => {
+      results.forEach(result => resultHandler(method, result, successCallback, errorCallback))
+    }, errorCallback)
   }
 
   _resultHandler (method, result, successCallback, errorCallback) {
@@ -112,7 +114,7 @@ export default class Aria2RPC {
   Object.defineProperty(Aria2RPC.prototype, method, {
     get: function () { },
     set: function (callback) {
-      this._setListener(method, callback)
+      this._addListener(method, callback)
     }
   })
 });
