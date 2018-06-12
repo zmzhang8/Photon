@@ -70,9 +70,11 @@ export default class Aria2RPC {
 
   _addListener (method, callback) {
     let resultHandler = this._resultHandler
-    this._rpcSocket.addListener(method, result => {
-      resultHandler(method, result, callback)
-    })
+    if (this._rpc.constructor === 'RPCWebSocket') {
+      this._rpc.addListener(method, result => {
+        resultHandler(method, result, callback)
+      })
+    }
   }
 
   _request (method, params, successCallback, errorCallback) {

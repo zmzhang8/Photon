@@ -3,7 +3,7 @@
   <router-view
     :server="manager.servers[manager.serverIndex]"
     :serverNameList="serverNameList"
-    :isDefault="manager.serverIndex === 1"
+    :isDefault="manager.serverIndex === 0"
     @updateServer="saveData()">
   </router-view>
 </div>

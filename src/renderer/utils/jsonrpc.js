@@ -58,8 +58,14 @@ export class RPCWebSocket {
       let url = (encryption ? 'wss://' : 'ws://') + address
       try {
         this._socket = new WebSocket(url)
+        let that = this
         let handles = this._handles
         let listeners = this._listeners
+        this._socket.onclose = event => {
+          setTimeout(() => {
+            if (that._socket.readyState > 1) that.setAddress(address, encryption)
+          }, 10000)
+        }
         this._socket.onmessage = message => {
           let data = JSON.parse(message.data)
           if (handles.hasOwnProperty(data.id)) {
@@ -123,7 +129,7 @@ export class RPCWebSocket {
   _send (data) {
     let that = this
     let socket = this._socket
-    if (!socket || (socket.readyState > 1)) socket.onerror(Error('WebSocket is in state ' + socket.readyState + '.'))
+    if (socket.readyState > 1) socket.onerror(Error('WebSocket is in state ' + socket.readyState + '.'))
     else if (socket.readyState === 0) setTimeout(() => that._send(data), 1000)
     else socket.send(JSON.stringify(data))
   }
