@@ -6,6 +6,8 @@ import Aria2Manager from '@/utils/aria2manager'
 import App from './App'
 import router from './router'
 
+if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
+
 /*
   aria2
 */
@@ -15,7 +17,6 @@ aria2manager.setSyncInterval(1000)
 /*
   Vue
 */
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
 Vue.use(VueI18n)
 
