@@ -78,6 +78,3 @@ setInterval(() => {
 app.on('will-quit', () => {
   AppData.writeData(aria2server.options)
 })
-
-// aria2server._handle._rpcSocket.request('addUri', [['https://www.7-zip.org/a/7z1805-x64.msi'], {}])
-// aria2server._handle._rpcSocket.request('getGlobalOption', [])

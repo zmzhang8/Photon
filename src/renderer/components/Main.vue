@@ -90,6 +90,7 @@ export default {
       if (this.isDefault) this.easterEgg = this.serverName.replace(/o/g, oConfusable[Math.floor(Math.random() * oConfusable.length)])
     },
     syncOptions: function () {
+      this.server.checkConnection()
       this.server.syncOptions()
     },
     addTask: function (task) {

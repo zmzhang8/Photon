@@ -69,19 +69,19 @@ export default class Aria2RPC {
   }
 
   _addListener (method, callback) {
-    let resultHandler = this._resultHandler
-    if (this._rpc.constructor === 'RPCWebSocket') {
-      this._rpc.addListener(method, result => {
-        resultHandler(method, result, callback)
+    let responseHandler = this._responseHandler
+    if (this._rpc.constructor === RPCWebSocket) {
+      this._rpc.addListener(method, response => {
+        responseHandler(method, response, callback)
       })
     }
   }
 
   _request (method, params, successCallback, errorCallback) {
-    let resultHandler = this._resultHandler
+    let responseHandler = this._responseHandler
     let id = method + '.' + this._date.getTime()
-    this._rpc.request(method, [this._token].concat(params), id, result => {
-      resultHandler(method, result, successCallback, errorCallback)
+    this._rpc.request(method, [this._token].concat(params), id, response => {
+      responseHandler(method, response, successCallback, errorCallback)
     }, errorCallback)
   }
 
@@ -94,27 +94,47 @@ export default class Aria2RPC {
         id: id
       }
     })
-    let resultHandler = this._resultHandler
-    this._rpc.batchRequest(requests, results => {
-      results.forEach(result => resultHandler(method, result, successCallback, errorCallback))
+    let responseHandler = this._responseHandler
+    this._rpc.batchRequest(requests, response => {
+      responseHandler(method, response, successCallback, errorCallback)
     }, errorCallback)
   }
 
-  _resultHandler (method, result, successCallback, errorCallback) {
-    if (result.hasOwnProperty('error')) {
-      let error = result.error
-      console.warn('[aria2.' + method + ' error]: ' + error.code + ' ' + error.message)
-      if (typeof errorCallback === 'function') errorCallback(Error(error.code + ' ' + error.message))
+  // _resultHandler (method, result, successCallback, errorCallback) {
+  //   if (result.hasOwnProperty('error')) {
+  //     let error = result.error
+  //     console.warn('[aria2.' + method + ' error]: ' + error.code + ' ' + error.message)
+  //     if (typeof errorCallback === 'function') errorCallback(Error(error.code + ' ' + error.message))
+  //   } else {
+  //     console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
+  //     if (typeof successCallback === 'function') successCallback(result.result || result.params)
+  //   }
+  // }
+
+  _responseHandler (method, response, successCallback, errorCallback) {
+    if (response.constructor === Array) {
+      let errorResults = response.filter(result => result.hasOwnProperty('error'))
+      errorResults.forEach(result => {
+        console.warn('[aria2.' + method + ' error]: ' + response.error.code + ' ' + response.error.message)
+      })
+      if (errorResults.length !== 0 && typeof errorCallback === 'function') errorCallback(errorResults)
+      let successResults = response.filter(result => !result.hasOwnProperty('error'))
+        .map(result => result.result || result.params)
+      if (successResults.length !== 0 && typeof successCallback === 'function') successCallback(successResults)
     } else {
-      console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
-      if (typeof successCallback === 'function') successCallback(result.result || result.params)
+      if (response.hasOwnProperty('error')) {
+        console.warn('[aria2.' + method + ' error]: ' + response.error.code + ' ' + response.error.message)
+        if (typeof errorCallback === 'function') errorCallback(response)
+      } else {
+        if (typeof successCallback === 'function') successCallback(response.result || response.params)
+      }
     }
   }
 }
 
 ['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
   Object.defineProperty(Aria2RPC.prototype, method, {
-    get: function () { },
+    get: function () {},
     set: function (callback) {
       this._addListener(method, callback)
     }

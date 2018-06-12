@@ -59,29 +59,13 @@ export class RPCWebSocket {
       try {
         this._socket = new WebSocket(url)
         let that = this
-        let handles = this._handles
-        let listeners = this._listeners
         this._socket.onclose = event => {
           setTimeout(() => {
             if (that._socket.readyState > 1) that.setAddress(address, encryption)
           }, 10000)
         }
-        this._socket.onmessage = message => {
-          let data = JSON.parse(message.data)
-          if (handles.hasOwnProperty(data.id)) {
-            if (typeof handles[data.id].success === 'function') handles[data.id].success(data)
-            delete handles[data.id]
-          } else if (listeners.hasOwnProperty(data.method)) {
-            if (typeof listeners[data.method] === 'function') listeners[data.method](data)
-          }
-        }
-        this._socket.onerror = error => {
-          if (error.hasOwnProperty('message')) console.error(error.message)
-          Object.keys(handles).forEach(id => {
-            if (typeof handles[id].error === 'function') handles[id].error(error)
-            delete handles[id]
-          })
-        }
+        this._socket.onerror = error => that._onerror(error, that._handles)
+        this._socket.onmessage = message => that._onmessage(message, that._handles, that._listeners)
       } catch (error) {
         console.error(error.message)
       }
@@ -132,5 +116,39 @@ export class RPCWebSocket {
     if (socket.readyState > 1) socket.onerror(Error('WebSocket is in state ' + socket.readyState + '.'))
     else if (socket.readyState === 0) setTimeout(() => that._send(data), 1000)
     else socket.send(JSON.stringify(data))
+  }
+
+  _onerror (error, handles) {
+    if (error.hasOwnProperty('message')) console.error(error.message)
+    Object.keys(handles).forEach(id => {
+      if (typeof handles[id].error === 'function') handles[id].error(error)
+      delete handles[id]
+    })
+  }
+
+  _onmessage (message, handles, listeners) {
+    let data = JSON.parse(message.data)
+    if (data.constructor === Array) {
+      data = data.reduce((last, cur) => {
+        if (last.hasOwnProperty(cur.id)) last[cur.id].push(cur)
+        else last[cur.id] = [cur]
+        return last
+      }, {})
+      for (let id in data) {
+        if (handles.hasOwnProperty(id)) {
+          if (typeof handles[id].success === 'function') handles[id].success(data[id])
+          delete handles[id]
+        }
+      }
+    } else if (data.hasOwnProperty('id')) {
+      if (handles.hasOwnProperty(data.id)) {
+        if (typeof handles[data.id].success === 'function') handles[data.id].success(data)
+        delete handles[data.id]
+      }
+    } else if (data.hasOwnProperty('method')) {
+      if (listeners.hasOwnProperty(data.method)) {
+        if (typeof listeners[data.method] === 'function') listeners[data.method](data)
+      }
+    }
   }
 }
