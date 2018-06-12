@@ -116,8 +116,8 @@ export default {
 <style lang="css" src="@fortawesome/fontawesome-free-webfonts/css/fontawesome.css" scoped></style>
 <style lang="css" scoped>
 .sidebar {
-  min-width: 212px;
-  max-width: 212px;
+  min-width: 200px;
+  max-width: 200px;
   min-height: 100%;
   max-height: 100%;
   position: fixed;
@@ -144,7 +144,7 @@ export default {
 }
 
 .row > .icon {
-  padding: 0 8px;
+  padding: 0 4px;
   flex: 0 0 20px;
   font-size: 20px;
 }
@@ -160,7 +160,7 @@ export default {
 .row > .status {
   padding: 0 4px;
   font-size: 12px;
-  flex: 0 0 32px;
+  flex: 0 0 28px;
   display: flex;
   align-items: center;
   justify-content: right;
@@ -187,7 +187,7 @@ export default {
 }
 
 .main {
-  margin-left: 212px;
+  margin-left: 200px;
   font-size: 20px;
 }
 </style>

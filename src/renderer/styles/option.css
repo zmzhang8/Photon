@@ -58,6 +58,7 @@ input, textarea, select {
 
 textarea {
   height: 160px;
+  resize: vertical;
 }
 
 input[type=text], input[type=password], textarea {
