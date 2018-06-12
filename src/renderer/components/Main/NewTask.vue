@@ -16,7 +16,7 @@
       </div>
       <div class="right pair">
         <label for="new-task-bt-choose" class="button fixed">{{ $t("message.newTask.choose") }}</label>
-        <input id="new-task-bt-choose" class="hidden" type="file" accept=".torrent, .metalink" @change="readFile($event)">
+        <input id="new-task-bt-choose" class="hidden" type="file" accept=".torrent, .metalink, .meta4" @change="readFile($event)">
         <input class="expanded" type="text" disabled v-model="filePath">
       </div>
     </div>
@@ -57,17 +57,18 @@ export default {
       let files = event.target.files
       if (files.length) {
         let reader = new FileReader()
+        let that = this
         reader.onload = (e) => {
-          if (files[0].name.endsWith('.torrent') || files[0].name.endsWith('.metalink')) {
-            this.file = e.target.result.replace(/^.*base64,/, '')
-            this.filePath = files[0].path
-            this.type = files[0].name.endsWith('.torrent') ? 'torrent' : 'metalink'
+          if (files[0].name.endsWith('.torrent') || files[0].name.endsWith('.metalink') || files[0].name.endsWith('.meta4')) {
+            that.file = e.target.result.replace(/^.*base64,/, '')
+            that.filePath = files[0].path
+            that.type = files[0].name.endsWith('.torrent') ? 'torrent' : 'metalink'
           }
         }
         reader.onerror = (error) => {
           console.error(error.message)
-          this.file = undefined
-          this.filePath = ''
+          that.file = undefined
+          that.filePath = ''
         }
         reader.readAsDataURL(files[0])
       }

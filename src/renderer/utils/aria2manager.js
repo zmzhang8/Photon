@@ -74,3 +74,16 @@ export default class Aria2Manager {
     return servers.map(server => new Aria2Server(server.name, server.rpc, server.options))
   }
 }
+
+['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
+  Object.defineProperty(Aria2Manager.prototype, method, {
+    get: function () {},
+    set: function (callback) {
+      this.servers.forEach((server, serverIndex) => {
+        server[method] = tasks => {
+          if (typeof callback === 'function') callback(tasks, server.name, serverIndex)
+        }
+      })
+    }
+  })
+})

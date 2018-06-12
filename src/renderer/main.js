@@ -40,6 +40,17 @@ new Vue({
 }).$mount('#app')
 
 /*
+  WebUI
+*/
+let completeSound = new Audio(require('@/assets/complete.mp3'))
+let errorSound = new Audio(require('@/assets/error.mp3'))
+aria2manager.onBtDownloadComplete = (tasks, serverName, serverIndex) => completeSound.play()
+aria2manager.onDownloadComplete = (tasks, serverName, serverIndex) => {
+  if (tasks.some(task => !task.isBT)) completeSound.play()
+}
+aria2manager.onDownloadError = (tasks, serverName, serverIndex) => errorSound.play()
+
+/*
   Electron
 */
 const AppData = require('../main/appdata').default

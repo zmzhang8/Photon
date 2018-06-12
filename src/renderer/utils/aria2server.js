@@ -135,6 +135,7 @@ export default class Aria2Server {
     return {
       gid: task.gid,
       status: task.status,
+      isBT: task.hasOwnProperty('bittorrent') && task['bittorrent'].hasOwnProperty('info'),
       name: task.hasOwnProperty('bittorrent') && task['bittorrent'].hasOwnProperty('info') ? task['bittorrent']['info']['name'] : task['files'][0]['path'].replace(/^.*[\\/]/, ''),
       totalLength: parseInt(task.totalLength),
       completedLength: parseInt(task.completedLength),

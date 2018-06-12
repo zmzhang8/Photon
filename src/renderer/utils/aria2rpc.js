@@ -38,7 +38,7 @@ export default class Aria2RPC {
 
   addMetalink (metalink, options = {}, successCallback, errorCallback) {
     const method = 'addMetalink'
-    this._request(method, [metalink, [], options], successCallback, errorCallback)
+    this._request(method, [metalink, options], successCallback, errorCallback)
   }
 
   tellStatus (gids, successCallback, errorCallback) {
@@ -99,17 +99,6 @@ export default class Aria2RPC {
       responseHandler(method, response, successCallback, errorCallback)
     }, errorCallback)
   }
-
-  // _resultHandler (method, result, successCallback, errorCallback) {
-  //   if (result.hasOwnProperty('error')) {
-  //     let error = result.error
-  //     console.warn('[aria2.' + method + ' error]: ' + error.code + ' ' + error.message)
-  //     if (typeof errorCallback === 'function') errorCallback(Error(error.code + ' ' + error.message))
-  //   } else {
-  //     console.log('[aria2.' + method + ' success]' + (typeof result.result === 'string' ? ': ' + result.result : ''))
-  //     if (typeof successCallback === 'function') successCallback(result.result || result.params)
-  //   }
-  // }
 
   _responseHandler (method, response, successCallback, errorCallback) {
     if (response.constructor === Array) {
