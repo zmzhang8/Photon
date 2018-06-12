@@ -144,13 +144,13 @@ export default {
 }
 
 .row > .icon {
-  padding: 0 4px;
+  padding: 0 8px;
   flex: 0 0 20px;
   font-size: 20px;
 }
 
 .row > .title {
-  padding: 0 8px;
+  padding: 0 4px;
   flex: 1 1 auto;
   overflow: hidden;
   white-space: nowrap;
@@ -158,7 +158,7 @@ export default {
 }
 
 .row > .status {
-  padding: 0 4px;
+  padding-right: 4px;
   font-size: 12px;
   flex: 0 0 28px;
   display: flex;
