@@ -6,6 +6,8 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 
 *Photon* 现发行于 **macOS** 和 **Windows** 平台，即将发布 Linux 版。
 
+如果你想要一个管理 aria2 的网页前端，请尝试 [*Photon WebUI*](https://github.com/alanzhangzm/Photon-WebUI/blob/master/README.zh-CN.md)。
+
 
 ## 截图
 

@@ -6,6 +6,7 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 
 *Photon* is cross platform. It has **macOS** and **Windows** releases now and will have Linux release soon.
 
+For Web frontend of aria2, please have a look at [*Photon WebUI*](https://github.com/alanzhangzm/Photon-WebUI).
 
 ## Screenshots
 
@@ -53,7 +54,6 @@ npm test
 
 # lint all JS/Vue component files in `src/`
 npm run lint
-
 ```
 
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[7c4e3e9](https://github.com/SimulatedGREG/electron-vue/tree/7c4e3e90a772bd4c27d2dd4790f61f09bae0fcef) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
@@ -61,3 +61,7 @@ This project was generated with [electron-vue](https://github.com/SimulatedGREG/
 
 ## License
 [Apache-2.0](https://github.com/alanzhangzm/Photon/blob/master/LICENSE)
+
+## Thanks
+
+[Aaron Tang](http://aaron-tang.com) for advice on UX design.
