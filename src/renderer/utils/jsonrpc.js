@@ -1,7 +1,7 @@
 export class RPCHTTP {
   constructor (address, encryption = false, namespace) {
-    this.setAddress(address, encryption)
     this.namespace = namespace
+    this.setAddress(address, encryption)
   }
 
   setAddress (address, encryption = false) {
@@ -47,12 +47,12 @@ export class RPCHTTP {
 export class RPCWebSocket {
   constructor (address, encryption = false, namespace) {
     this.namespace = namespace
+    this._listeners = {}
     this.setAddress(address, encryption)
   }
 
   setAddress (address, encryption) {
     this._handles = {}
-    this._listeners = {}
     if (typeof WebSocket !== 'function') throw Error('This client does not support WebSocket.')
     else {
       let url = (encryption ? 'wss://' : 'ws://') + address
