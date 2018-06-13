@@ -1,11 +1,6 @@
 'use strict'
 
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  dialog
-} from 'electron'
+import { app, BrowserWindow, Menu, dialog } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -56,8 +51,7 @@ const menuTemplate = [{
     click: function () {
       app.quit()
     }
-  }
-  ]
+  }]
 },
 {
   label: 'Edit',
@@ -93,10 +87,8 @@ const menuTemplate = [{
     label: 'Select All',
     accelerator: 'CmdOrCtrl+A',
     selector: 'selectAll:'
-  }
-  ]
-}
-]
+  }]
+}]
 
 app.on('ready', () => {
   if (!aria2process) aria2process = startAria2()
@@ -106,6 +98,8 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
+  app.setBadgeCount(0)
+  mainWindow.setOverlayIcon(null, '')
   if (process.platform !== 'darwin') {
     app.quit()
   }

@@ -54,33 +54,35 @@ aria2manager.onDownloadError = (tasks, serverName, serverIndex) => errorSound.pl
 /*
   Electron
 */
+const os = require('os')
 const AppData = require('../main/appdata').default
-const { app, powerSaveBlocker } = require('electron').remote
+const { app, powerSaveBlocker, nativeImage } = require('electron').remote
 const webFrame = require('electron').webFrame
+const window = require('electron').remote.getCurrentWindow()
 let aria2server = aria2manager.servers[0]
 
 // disable zooming
 webFrame.setZoomLevelLimits(1, 1)
 
 // set app badge (works for macOS and Unity)
-// const os = require('os')
-// const window = require('electron').remote.getCurrentWindow()
-// if (os.platform() === 'win32') {
-//   setInterval(() => {
-//     let number = aria2server.activeNumber()
-//     if (number !== 0) window.setOverlayIcon('@/assets/badge.png', number)
-//     else window.setOverlayIcon(null)
-//   }, 1000)
-// } else {
-//   setInterval(() => {
-//     app.setBadgeCount(aria2server.activeNumber())
-//   }, 1000)
-// }
+if (os.platform() === 'win32') {
+  let badge = nativeImage.createFromPath('@/assets/badge.png')
+  setInterval(() => {
+    let number = aria2server.tasks.active.length + aria2server.tasks.waiting.length
+    if (number !== 0) window.setOverlayIcon(badge, number.toString())
+    else window.setOverlayIcon(null, '')
+  }, 1000)
+} else {
+  setInterval(() => {
+    let number = aria2server.tasks.active.length + aria2server.tasks.waiting.length
+    app.setBadgeCount(number)
+  }, 1000)
+}
 
 // prevent suspension when downloading
 let blocker
 setInterval(() => {
-  if (aria2server.isDownloading !== 0) {
+  if (aria2server.isDownloading) {
     if (blocker === undefined || !powerSaveBlocker.isStarted(blocker)) blocker = powerSaveBlocker.start('prevent-app-suspension')
   } else {
     if (blocker && powerSaveBlocker.isStarted(blocker)) powerSaveBlocker.stop(blocker)
