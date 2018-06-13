@@ -138,7 +138,7 @@ app.on('ready', () => {
 // aria2
 function startAria2 () {
   const AppData = require('./appdata').default
-  const spawn = require('child_process').spawn
+  const exec = require('child_process').exec
   const join = require('path').join
   const platform = require('os').platform()
   const homedir = require('os').homedir()
@@ -156,17 +156,19 @@ function startAria2 () {
     'input-file': session,
     'save-session': session,
     'dht-file-path': join(datadir, 'dht.dat'),
-    'dht-file-path6': join(datadir, 'dht6.dat')
+    'dht-file-path6': join(datadir, 'dht6.dat'),
+    'quiet': 'true'
   }, AppData.readData() || {})
   if (!options.hasOwnProperty('dir')) options['dir'] = join(homedir, 'Downloads')
 
-  let command = '"' + aria2c + '"'
-  let args = ['--conf-path="' + conf + '"']
-  for (let key in options) args.push('--' + key + '="' + options[key] + '"')
-  let subprocess = spawn(command, args, { shell: true })
-  subprocess.on('exit', (code, signal) => {
-    if (code === 1) dialog.showErrorBox('Warning', 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.')
-    app.quit()
+  let command = '"' + aria2c + '" --conf-path="' + conf + '"'
+  for (let key in options) command += ' --' + key + '="' + options[key] + '"'
+  return exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(error.message)
+      const message = 'conflicts with an existing aria2 instance. Please stop the instance and reopen the app.'
+      dialog.showErrorBox('Warning', message)
+      app.quit()
+    }
   })
-  return subprocess
 }
