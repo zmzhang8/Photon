@@ -61,7 +61,7 @@ export default {
         reader.onload = (e) => {
           if (files[0].name.endsWith('.torrent') || files[0].name.endsWith('.metalink') || files[0].name.endsWith('.meta4')) {
             that.file = e.target.result.replace(/^.*base64,/, '')
-            that.filePath = files[0].path
+            that.filePath = files[0].path || files[0].name
             that.type = files[0].name.endsWith('.torrent') ? 'torrent' : 'metalink'
           }
         }
