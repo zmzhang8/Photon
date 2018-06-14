@@ -17,7 +17,7 @@
       <div class="right pair">
         <label for="new-task-bt-choose" class="button fixed">{{ $t("message.newTask.choose") }}</label>
         <input id="new-task-bt-choose" class="hidden" type="file" accept=".torrent, .metalink, .meta4" @change="readFile($event)">
-        <input class="expanded" type="text" disabled v-model="filePath">
+        <input class="expanded" type="text" disabled v-model="filename">
       </div>
     </div>
     <div class="row">
@@ -43,7 +43,7 @@ export default {
       type: 'http',
       uris: '',
       file: undefined,
-      filePath: '',
+      filename: '',
       seeding: true
     }
   },
@@ -61,14 +61,14 @@ export default {
         reader.onload = (e) => {
           if (files[0].name.endsWith('.torrent') || files[0].name.endsWith('.metalink') || files[0].name.endsWith('.meta4')) {
             that.file = e.target.result.replace(/^.*base64,/, '')
-            that.filePath = files[0].path || files[0].name
+            that.filename = files[0].name
             that.type = files[0].name.endsWith('.torrent') ? 'torrent' : 'metalink'
           }
         }
         reader.onerror = (error) => {
           console.error(error.message)
           that.file = undefined
-          that.filePath = ''
+          that.filename = ''
         }
         reader.readAsDataURL(files[0])
       }
