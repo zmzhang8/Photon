@@ -2,22 +2,21 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 
 # Photon
 
-*Photon* is a lightweight multi-threaded downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink** download.
+*Photon* is a lightweight multi-threaded downloader based on [aria2](https://github.com/aria2/aria2). It supports **HTTP/HTTPS**, **Magnet links**, **BitTorrent** and **Metalink**.
 
 *Photon* is cross platform. It has **macOS** and **Windows** releases now and will have Linux release soon.
 
 For Web frontend of aria2, please have a look at [*Photon WebUI*](https://github.com/alanzhangzm/Photon-WebUI).
 
+## Installation
+
+Latest releases: https://github.com/alanzhangzm/Photon/releases
+
 ## Screenshots
 
 **Mac**
 
-![mac](screenshot/mac.png)
-
-
-## Installation
-
-Latest releases: https://github.com/alanzhangzm/Photon/releases
+![mac-donwloading](screenshot/mac-downloading.png)
 
 
 ## Extensions
