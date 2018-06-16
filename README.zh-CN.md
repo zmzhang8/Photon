@@ -26,9 +26,8 @@ Languages: [English](https://github.com/alanzhangzm/Photon) [中文](https://git
 
 *Photon* 和 aria2 默认的 RPC 配置：
 - URL: http://127.0.0.1:6800/jsonrpc
-- 地址: 127.0.0.1
+- 主机: 127.0.0.1
 - 端口: 6800
-- 协议: HTTP
 
 常用的插件:
 - 百度云下载插件：[BaiduExporter](https://github.com/acgotaku/BaiduExporter)
