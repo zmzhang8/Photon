@@ -148,7 +148,7 @@ function startAria2 () {
   const conf = join(root, 'aria2.conf')
   const session = join(datadir, 'aria2.session')
 
-  AppData.makeExecutable(aria2c)
+  if (aria2c !== 'aria2c') AppData.makeExecutable(aria2c)
   AppData.makeDir(datadir)
   AppData.touchFile(session)
 
