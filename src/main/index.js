@@ -99,7 +99,6 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () => {
   app.setBadgeCount(0)
-  mainWindow.setOverlayIcon(null, '')
   if (process.platform !== 'darwin') {
     app.quit()
   }

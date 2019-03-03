@@ -54,30 +54,19 @@ aria2manager.onDownloadError = (tasks, serverName, serverIndex) => errorSound.pl
 /*
   Electron
 */
-const os = require('os')
 const AppData = require('../main/appdata').default
-const { app, powerSaveBlocker, nativeImage } = require('electron').remote
+const { app, powerSaveBlocker } = require('electron').remote
 const webFrame = require('electron').webFrame
-const window = require('electron').remote.getCurrentWindow()
 let aria2server = aria2manager.servers[0]
 
 // disable zooming
 webFrame.setZoomLevelLimits(1, 1)
 
 // set app badge (works for macOS and Unity)
-if (os.platform() === 'win32') {
-  let badge = nativeImage.createFromPath('@/assets/badge.png')
-  setInterval(() => {
-    let number = aria2server.tasks.active.length + aria2server.tasks.waiting.length
-    if (number !== 0) window.setOverlayIcon(badge, number.toString())
-    else window.setOverlayIcon(null, '')
-  }, 1000)
-} else {
-  setInterval(() => {
-    let number = aria2server.tasks.active.length + aria2server.tasks.waiting.length
-    app.setBadgeCount(number)
-  }, 1000)
-}
+setInterval(() => {
+  let number = aria2server.tasks.active.length + aria2server.tasks.waiting.length
+  app.setBadgeCount(number)
+}, 1000)
 
 // prevent suspension when downloading
 let blocker
