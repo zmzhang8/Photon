@@ -11,7 +11,10 @@
     "seeding": "做种",
     "choose": "选择文件",
     "start": "开始",
-    "cancel": "取消"
+    "cancel": "取消",
+    "filename": "文件名",
+    "filetype": "格式",
+    "size": "大小"
   },
   "settings": {
     "general": "通用",

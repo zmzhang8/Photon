@@ -71,6 +71,9 @@ export default class Aria2Server {
     let options = task.seeding ? defaultSeedingOptions : defaultNoSeedingOptions
     switch (task.type) {
       case 'torrent':
+        if (task.selectfile) {
+          options['select-file'] = task.selectfile
+        }
         handle.addTorrent(task.file, options, successCallback, errorCallback)
         break
       case 'metalink':
@@ -153,7 +156,9 @@ export default class Aria2Server {
 
 ['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
   Object.defineProperty(Aria2Server.prototype, method, {
-    get: function () {},
+    get: function () {
+      return undefined
+    },
     set: function (callback) {
       let handle = this._handle
       let formatTask = this._formatTask

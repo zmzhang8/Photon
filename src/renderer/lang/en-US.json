@@ -11,7 +11,10 @@
     "seeding": "Seeding",
     "choose": "Choose",
     "start": "Start",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "filename": "File Name",
+    "filetype": "Type",
+    "size": "Size"
   },
   "settings": {
     "general": "General",

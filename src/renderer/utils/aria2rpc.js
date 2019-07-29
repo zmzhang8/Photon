@@ -123,7 +123,9 @@ export default class Aria2RPC {
 
 ['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
   Object.defineProperty(Aria2RPC.prototype, method, {
-    get: function () {},
+    get: function () {
+      return undefined
+    },
     set: function (callback) {
       this._addListener(method, callback)
     }

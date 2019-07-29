@@ -56,7 +56,9 @@ export default class Aria2Manager {
 
 ['onDownloadStart', 'onDownloadPause', 'onDownloadStop', 'onDownloadComplete', 'onDownloadError', 'onBtDownloadComplete'].forEach(method => {
   Object.defineProperty(Aria2Manager.prototype, method, {
-    get: function () {},
+    get: function () {
+      return undefined
+    },
     set: function (callback) {
       this.servers.forEach((server, serverIndex) => {
         server[method] = tasks => {
