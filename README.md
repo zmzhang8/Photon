@@ -16,7 +16,7 @@ Latest releases: https://github.com/alanzhangzm/Photon/releases
 
 **Mac**
 
-![mac-donwloading](screenshot/mac-downloading.png)
+![mac-downloading](screenshot/mac-downloading.png)
 
 
 ## Extensions
