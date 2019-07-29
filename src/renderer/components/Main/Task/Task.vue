@@ -7,7 +7,10 @@
     <div class="title" :title="alias">{{ alias }}</div>
     <div class="detail detail-left">
       <div v-if="totalLength !== 0">{{ bytesToString(totalLength, 2) }}</div>
-      <div style="margin-left: 16px;" v-if="uploadLength !== 0"><i class="far fa-arrow-alt-circle-up"></i> {{ bytesToString(uploadLength, 2) }}</div>
+      <div style="margin-left: 16px;" v-if="uploadLength !== 0">
+        <i class="far fa-arrow-alt-circle-up"></i> {{ bytesToString(uploadLength, 2) }}
+        <span v-if="uploadSpeed !== 0">, {{ bytesToString(uploadSpeed, 1) + 'B/s' }}</span>
+        </div>
     </div>
   </div>
   <div class="col-progress">
