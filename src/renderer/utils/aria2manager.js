@@ -16,6 +16,10 @@ export default class Aria2Manager {
     if (this.serverIndex >= this.servers.length) this.serverIndex = this.servers.length - 1
   }
 
+  setServerIndex (index) {
+    this.serverIndex = Math.min(this.servers.length - 1, Math.max(0, index))
+  }
+
   setSyncInterval (interval = 3000) {
     this.sync = setInterval(() => this.syncTasks(), interval)
   }

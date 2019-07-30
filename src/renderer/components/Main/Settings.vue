@@ -1,19 +1,28 @@
 <template>
 <div id="settings">
+  <div class="toolbar">
+    <a href="#" @click="$emit('addServer')">
+      <i class="fas fa-file-medical"></i>
+    </a>
+    <a href="#" :class="{disabled: settings.isDefault}" @click="$emit('removeServer')">
+      <i class="fas fa-trash-alt"></i>
+    </a>
+  </div>
+
   <div class="content">
     <form @change="$emit('updateSettings')">
-      <div id="settings-general" class="group" v-if="!settings.isDefault">
+      <div id="settings-general" class="group" v-if="!(settings.isDesktop && settings.isDefault)">
         <div class="header">{{ $t("message.settings.general") }}</div>
         <div class="row">
           <div class="left">
-            <label for="settings-general-config">{{ $t("message.settings.config") }}</label>
+            <label for="settings-general-config">{{ $t("message.settings.profile") }}</label>
           </div>
           <div class="right">
             <input id="settings-general-config" type="text" required v-model="settings.name">
           </div>
         </div>
       </div>
-      <div id="settings-rpc" class="group" v-if="!settings.isDefault">
+      <div id="settings-rpc" class="group" v-if="!(settings.isDesktop && settings.isDefault)">
         <div class="header">{{ $t("message.settings.rpc") }}</div>
         <div class="row">
           <div class="left">
@@ -64,7 +73,7 @@
             <label for="settings-download-path">{{ $t("message.settings.directory") }}</label>
           </div>
           <div class="right pair">
-            <label for="settings-download-path-choose" class="button fixed" :class="{'disabled': !settings.isDefault}">{{ $t("message.settings.choose") }}</label>
+            <label for="settings-download-path-choose" class="button fixed" :class="{'disabled': !(settings.isDesktop && settings.isDefault)}">{{ $t("message.settings.choose") }}</label>
             <input id="settings-download-path-choose" class="hidden" type="file" webkitdirectory mozdirectory msdirectory odirectory directory multiple @change="setDir($event)">
             <input class="expanded" type="text" disabled v-model="settings.options['dir']">
           </div>
@@ -149,6 +158,9 @@ export default {
 }
 </script>
 
+<style lang="css" src="@fortawesome/fontawesome-free-webfonts/css/fa-solid.css" scoped></style>
+<style lang="css" src="@fortawesome/fontawesome-free-webfonts/css/fontawesome.css" scoped></style>
+<style lang="css" src="@/styles/toolbar.css" scoped></style>
 <style lang="css" src="@/styles/option.css" scoped></style>
 <style lang="css" scoped>
 .badge {

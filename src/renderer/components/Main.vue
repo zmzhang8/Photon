@@ -1,11 +1,16 @@
 <template>
 <div class="wrapper">
   <div class="sidebar">
-    <div id="sidebar-servers" class="row" style="padding-bottom: 0;">
-      <div class="icon" style="padding: 0;" @click="getEasterEgg">
-        <img src="@/assets/logo.png" class="logo">
+    <div id="sidebar-servers" v-for="(sv, index) in manager.servers"
+      :key="index + sv.name">
+      <div class="row"
+        :class="{profile_active: manager.servers.length > 1 && index === manager.serverIndex}"
+        @click="setServerIndex(index)">
+        <div class="icon" style="padding: 0;">
+          <img src="@/assets/logo.png" class="logo">
+        </div>
+        <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{ (isDesktop && index === 0) ? "Photon" : sv.name }}</div>
       </div>
-      <div class="title" style="font-size: 20px; font-weight: bold; cursor: default;">{{ easterEgg || serverName }}</div>
     </div>
     <div class="seperator-v"></div>
     <router-link to="/downloading" id="sidebar-downloading" class="row">
@@ -43,6 +48,8 @@
       @addTask="addTask($event)"
       @changeTaskStatus="changeTaskStatus($event)"
       @purgeTasks="purgeTasks($event)"
+      @addServer="addServer()"
+      @removeServer="removeServer()"
       @updateSettings="updateSettings()">
     </router-view>
   </div>
@@ -50,18 +57,14 @@
 </template>
 
 <script>
-const oConfusable = ['ం', 'ಂ', 'ം', 'ං', '०', '੦', '૦', '௦', '౦', '೦', '൦', '๐', '໐', '၀', '٥', '۵', 'ｏ', 'ℴ', '𝐨', '𝑜', '𝒐', '𝓸', '𝔬', '𝕠', '𝖔', '𝗈', '𝗼', '𝘰', '𝙤', '𝚘', 'ᴏ', 'ᴑ', 'ꬽ', 'ο', '𝛐', '𝜊', '𝝄', '𝝾', '𝞸', 'σ', '𝛔', '𝜎', '𝝈', '𝞂', '𝞼', 'ⲟ', 'о', 'ჿ', 'օ', 'ס', 'ه', '𞸤', '𞹤', '𞺄', 'ﻫ', 'ﻬ', 'ﻪ', 'ﻩ', 'ھ', 'ﮬ', 'ﮭ', 'ﮫ', 'ﮪ', 'ہ', 'ﮨ', 'ﮩ', 'ﮧ', 'ﮦ', 'ە', 'ഠ', 'ဝ', '𐓪', '𑣈', '𑣗', '𐐬']
-
 export default {
-  data: function () {
-    return {
-      easterEgg: ''
-    }
-  },
-  props: ['server', 'serverNameList', 'isDefault'],
+  props: ['manager', 'isDesktop'],
   computed: {
-    serverName: function () {
-      return this.isDefault ? 'Photon' : this.server.name
+    server: function () {
+      return this.manager.servers[this.manager.serverIndex]
+    },
+    isDefault: function () {
+      return this.manager.serverIndex === 0
     },
     downloadingNumber: function () {
       let tasks = this.server.tasks
@@ -81,14 +84,12 @@ export default {
         connection: server.connection,
         rpc: JSON.parse(JSON.stringify(server.rpc)),
         options: JSON.parse(JSON.stringify(server.options)),
-        isDefault: this.isDefault
+        isDefault: this.isDefault,
+        isDesktop: this.isDesktop
       }
     }
   },
   methods: {
-    getEasterEgg: function () {
-      if (this.isDefault) this.easterEgg = this.serverName.replace(/o/g, oConfusable[Math.floor(Math.random() * oConfusable.length)])
-    },
     syncOptions: function () {
       this.server.checkConnection()
       this.server.syncOptions()
@@ -102,11 +103,23 @@ export default {
     purgeTasks: function (gids) {
       this.server.purgeTasks(gids)
     },
+    addServer: function () {
+      this.manager.addServer()
+      this.manager.serverIndex = this.manager.servers.length - 1
+      this.updateSettings()
+    },
+    removeServer: function () {
+      this.manager.removeServer()
+      this.updateSettings()
+    },
+    setServerIndex: function (index) {
+      this.manager.setServerIndex(index)
+    },
     updateSettings: function () {
       let server = this.server
       let settings = this.settings
       server.setServer(settings.name, settings.rpc, settings.options, !this.isDefault)
-      this.$emit('updateServer')
+      this.manager.writeStorage()
     }
   }
 }
@@ -129,11 +142,15 @@ export default {
   align-items: stretch;
 }
 
+.profile_active {
+  background-color: #666;
+}
+
 .router-link-active {
   background-color: #00A0F1;
 }
 
-.sidebar > .row {
+.sidebar .row {
   padding: 12px 12px;
   color: #ddd;
   text-decoration: none;

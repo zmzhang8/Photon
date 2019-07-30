@@ -18,7 +18,7 @@
   },
   "settings": {
     "general": "General",
-    "config": "Config",
+    "profile": "Profile",
     "rpc": "RPC",
     "host": "Host",
     "port": "Port",

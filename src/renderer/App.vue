@@ -1,10 +1,8 @@
 <template>
 <div id="app">
   <router-view
-    :server="manager.servers[manager.serverIndex]"
-    :serverNameList="serverNameList"
-    :isDefault="manager.serverIndex === 0"
-    @updateServer="saveData()">
+    :manager="manager"
+    :isDesktop="true">
   </router-view>
 </div>
 </template>
@@ -12,19 +10,7 @@
 <script>
 export default {
   name: 'photon',
-  props: ['manager'],
-  computed: {
-    serverNameList: function () {
-      return this.manager.servers.map(server => {
-        return server.name
-      })
-    }
-  },
-  methods: {
-    saveData: function () {
-      this.manager.writeStorage()
-    }
-  }
+  props: ['manager']
 }
 </script>
 
