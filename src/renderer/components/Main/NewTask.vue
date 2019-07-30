@@ -24,24 +24,24 @@
       <div class="left"></div>
       <div class="right">
         <div class="scroll-div">
-        <table>
-          <thead>
-            <th style="width: 20px">
-              <input id="file-selection-all" type="checkbox" v-model="selectAll">
-            </th>
-            <th>{{ $t("message.newTask.filename") }}</th>
-            <th style="width: 60px">{{ $t("message.newTask.filetype") }}</th>
-            <th style="width: 60px">{{ $t("message.newTask.size") }}</th>
-          </thead>
-          <tbody v-for="file in filesInTorrent" :key="file.index">
-            <td style="width: 20px">
-              <input type="checkbox" v-model="file.selected">
-            </td>
-            <td>{{file.name}}</td>
-            <td style="width: 60px">{{ file.extension }}</td>
-            <td style="width: 60px">{{ bytesToString(file.size, 1) }}</td>
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <th style="width: 20px">
+                <input id="file-selection-all" type="checkbox" v-model="selectAll">
+              </th>
+              <th>{{ $t("message.newTask.filename") }}</th>
+              <th style="width: 60px">{{ $t("message.newTask.filetype") }}</th>
+              <th style="width: 60px">{{ $t("message.newTask.size") }}</th>
+            </thead>
+            <tbody v-for="file in filesInTorrent" :key="file.index">
+              <td style="width: 20px">
+                <input type="checkbox" v-model="file.selected">
+              </td>
+              <td>{{file.name}}</td>
+              <td style="width: 60px">{{ file.extension }}</td>
+              <td style="width: 60px">{{ bytesToString(file.size, 1) }}</td>
+            </tbody>
+          </table>
         </div>
         <div class="footnote">
           <div class="left">
@@ -222,6 +222,7 @@ export default {
 <style lang="css" src="@/styles/option.css" scoped></style>
 <style lang="css" scoped>
 table {
+  table-layout: fixed;
   width: 100%;
   text-align: left;
   margin: auto;
@@ -229,15 +230,11 @@ table {
   color: #444;
 }
 
-thead, tbody {
-  max-width: 0;
+th, td {
+  padding: 4px 8px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-th, td {
-  padding: 4px 8px;
 }
 
 th {
