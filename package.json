@@ -1,16 +1,16 @@
 {
   "name": "photon",
-  "version": "0.4.2",
-  "author": "Alan Zhang <alandevel@outlook.com>",
+  "version": "0.4.3",
+  "author": "Alan Zhang",
   "description": "A lightweight downloader based on aria2",
   "license": "Apache-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder --x64",
-    "build:mac": "node .electron-vue/build.js && electron-builder --mac",
-    "build:win": "node .electron-vue/build.js && electron-builder --win",
-    "build:linux": "node .electron-vue/build.js && electron-builder --linux",
-    "build:all": "node .electron-vue/build.js && electron-builder -mw",
+    "build:mac": "node .electron-vue/build.js && electron-builder --x64 --mac",
+    "build:win": "node .electron-vue/build.js && electron-builder --x64 --win",
+    "build:linux": "node .electron-vue/build.js && electron-builder --x64 --linux",
+    "build:all": "node .electron-vue/build.js && electron-builder --x64 -mw",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -53,7 +53,8 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/icon.icns",
+      "target": "zip"
     },
     "win": {
       "icon": "build/icons/icon.ico"
