@@ -198,16 +198,18 @@ export default {
       if (this.type === 'torrent' && this.selectedFiles.length === 0) {
         return
       }
-      let selectfile = this.selectedFiles.map(file => {
-        return file.index
-      }).join(',')
-      this.$emit('addTask', {
+      let message = {
         type: this.type,
         uris: this.urlList,
         file: this.file,
-        seeding: this.seeding,
-        selectfile: selectfile
-      })
+        seeding: this.seeding
+      }
+      if (this.selectedFiles.length !== this.filesInTorrent.length) {
+        message['selectfile'] = this.selectedFiles.map(file => {
+          return file.index
+        }).join(',')
+      }
+      this.$emit('addTask', message)
       this.$router.push('/downloads')
     },
     cancel: function () {
