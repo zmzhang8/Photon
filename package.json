@@ -121,7 +121,7 @@
     "inject-loader": "^3.0.0",
     "karma": "^2.0.2",
     "karma-chai": "^0.1.0",
-    "karma-coverage": "^1.1.1",
+    "karma-coverage": "^2.0.3",
     "karma-electron": "^5.1.1",
     "karma-mocha": "^1.2.0",
     "karma-sourcemap-loader": "^0.3.7",
